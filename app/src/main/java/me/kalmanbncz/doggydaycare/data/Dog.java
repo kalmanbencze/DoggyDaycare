@@ -5,7 +5,7 @@ package me.kalmanbncz.doggydaycare.data;
  */
 public class Dog {
 
-    private int id;
+    private int id = -1;
 
     private String name;
 
@@ -46,6 +46,10 @@ public class Dog {
         this.eatingSched = eatingSched;
         this.sleepSched = sleepSched;
         this.walkSched = walkSched;
+    }
+
+    public Dog() {
+
     }
 
     public int getId() {

@@ -72,6 +72,11 @@ public class DogRepositoryImpl implements DogRepository {
             .observeOn(AndroidSchedulers.mainThread());
     }
 
+    @Override
+    public void addOrUpdate(Dog dog) {
+
+    }
+
     private Observable<List<Dog>> convertDogPageResponseToDogsList(DogsPageList dogsPageList) {
         Log.d(TAG, "convertDogPageResponseToDogsList: ");
         Observable<List<Dog>> res = Observable.just(dogsPageList.getDogs());

@@ -4,10 +4,12 @@ import android.util.Log;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.PublishSubject;
 import javax.inject.Inject;
 import me.kalmanbncz.doggydaycare.data.LoginResult;
 import me.kalmanbncz.doggydaycare.data.LoginState;
 import me.kalmanbncz.doggydaycare.di.scopes.screen.LoginScreenScope;
+import me.kalmanbncz.doggydaycare.domain.ResourcesProvider;
 import me.kalmanbncz.doggydaycare.domain.user.UserRepository;
 import me.kalmanbncz.doggydaycare.presentation.BaseViewModel;
 
@@ -31,13 +33,18 @@ public class LoginViewModel implements BaseViewModel {
 
     private final BehaviorSubject<String> title = BehaviorSubject.create();
 
+    private final ResourcesProvider resourcesProvider;
+
+    public PublishSubject<String> snackbar = PublishSubject.create();
+
     private BehaviorSubject<String> usernameSubject = BehaviorSubject.create();
 
     private BehaviorSubject<String> passwordSubject = BehaviorSubject.create();
 
     @Inject
-    LoginViewModel(UserRepository userRepository) {
+    LoginViewModel(ResourcesProvider resourcesProvider, UserRepository userRepository) {
         this.userRepository = userRepository;
+        this.resourcesProvider = resourcesProvider;
         state.onNext(LoginState.LOGGED_OUT);
         title.onNext("Login");
     }
@@ -73,15 +80,26 @@ public class LoginViewModel implements BaseViewModel {
 
     public void logIn(String user, String password) {
         state.onNext(LoginState.LOGGING_IN);
-        subscriptions.add(userRepository.login(user, password).subscribe(this::loggedIn));
+        subscriptions.add(userRepository.login(user, password).subscribe(loginResult -> {
+            loggedIn(user, loginResult);
+        }));
     }
 
-    private void loggedIn(LoginResult loginResult) {
+    private void loggedIn(String user, LoginResult loginResult) {
         Log.d(TAG, "loggedIn: success = " + loginResult.isSuccess());
+        if (loginResult.isSuccess()) {
+            snackbar.onNext(resourcesProvider.getWelcomeMessage(user));
+        } else {
+            snackbar.onNext(resourcesProvider.getLoginErrorMessage());
+        }
     }
 
     public Observable<String> getTitle() {
         return title;
+    }
+
+    public Observable<String> getSnackbar() {
+        return snackbar;
     }
 
     public BehaviorSubject<String> getPasswordSubject() {

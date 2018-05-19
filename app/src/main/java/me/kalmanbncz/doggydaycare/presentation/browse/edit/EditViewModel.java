@@ -5,6 +5,7 @@ import io.reactivex.subjects.PublishSubject;
 import javax.inject.Inject;
 import me.kalmanbncz.doggydaycare.data.Dog;
 import me.kalmanbncz.doggydaycare.di.scopes.screen.EditScreenScope;
+import me.kalmanbncz.doggydaycare.domain.ResourcesProvider;
 import me.kalmanbncz.doggydaycare.domain.dog.DogRepository;
 import me.kalmanbncz.doggydaycare.presentation.BaseViewModel;
 
@@ -25,11 +26,11 @@ public class EditViewModel implements BaseViewModel {
     private Dog dog;
 
     @Inject
-    EditViewModel(DogRepository dogRepository, Dog dog) {
+    EditViewModel(ResourcesProvider resourcesProvider, DogRepository dogRepository, Dog dog) {
         this.dogRepository = dogRepository;
         this.dog = dog;
-        title.onNext("Edit");
-        snackbar.onNext("Editing");
+        title.onNext(dog.getId() < 0 ? resourcesProvider.getCreateScreenTitle() : resourcesProvider.getEditScreenTitle());
+        //snackbar.onNext("Editing");
         loading.onNext(true);
     }
 
@@ -41,5 +42,9 @@ public class EditViewModel implements BaseViewModel {
     @Override
     public void onDetach() {
 
+    }
+
+    private void changed() {
+        dogRepository.addOrUpdate(dog);
     }
 }

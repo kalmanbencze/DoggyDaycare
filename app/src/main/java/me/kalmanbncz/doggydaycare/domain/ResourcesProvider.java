@@ -14,4 +14,12 @@ public interface ResourcesProvider {
     String getApiKey();
 
     String getDogsScreenTitle();
+
+    String getCreateScreenTitle();
+
+    String getEditScreenTitle();
+
+    String getWelcomeMessage(String user);
+
+    String getLoginErrorMessage();
 }

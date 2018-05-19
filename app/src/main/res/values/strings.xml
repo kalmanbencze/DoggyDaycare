@@ -19,4 +19,10 @@
     <string name="eating_schedule_hint_label">Eating schedule</string>
     <string name="walking_schedule_hint_label">Walking schedule</string>
     <string name="sleeping_schedule_hint_label">When does the dog sleep</string>
+    <string name="empty_list_action">Add your first dog</string>
+    <string name="empty_list_label">You haven\'t added any dogs yet</string>
+    <string name="welcome_message">Welcome back %s!</string>
+    <string name="create_label">Create Dog</string>
+    <string name="edit_label">Edit Dog</string>
+    <string name="login_error">Error logging in, please try again.</string>
 </resources>

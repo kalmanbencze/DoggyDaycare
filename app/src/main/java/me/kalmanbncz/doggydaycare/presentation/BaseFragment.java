@@ -102,4 +102,8 @@ public abstract class BaseFragment extends Fragment {
             snackbar.show();
         });
     }
+
+    public void showSnackBar(String s) {
+        showSnackBar(s, Snackbar.LENGTH_SHORT);
+    }
 }

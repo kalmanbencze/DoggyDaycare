@@ -36,4 +36,24 @@ public class ResourcesProviderImpl implements ResourcesProvider {
     public String getDogsScreenTitle() {
         return context.getString(R.string.dogs_label);
     }
+
+    @Override
+    public String getCreateScreenTitle() {
+        return context.getString(R.string.create_label);
+    }
+
+    @Override
+    public String getEditScreenTitle() {
+        return context.getString(R.string.edit_label);
+    }
+
+    @Override
+    public String getWelcomeMessage(String user) {
+        return context.getString(R.string.welcome_message, user);
+    }
+
+    @Override
+    public String getLoginErrorMessage() {
+        return context.getString(R.string.login_error);
+    }
 }

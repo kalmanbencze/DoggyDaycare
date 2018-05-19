@@ -62,6 +62,7 @@ public class LoginFragment extends BaseFragment {
         viewModel.onAttach();
         subscriptions.add(viewModel.getLoginState().subscribe(this::onStateChanged, this::onError));
         subscriptions.add(viewModel.getTitle().subscribe(this::setTitle, this::onError));
+        subscriptions.add(viewModel.getSnackbar().subscribe(this::showSnackBar, this::onError));
         usernameEditText.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -104,7 +105,12 @@ public class LoginFragment extends BaseFragment {
             usernameEditText.setText("user1");
             passwordEditText.setText("123456");
         }
-        loginButton.setOnClickListener(v -> viewModel.logIn(usernameEditText.getText().toString(), passwordEditText.getText().toString()));
+        loginButton.setOnClickListener(v -> {
+            viewModel.logIn(usernameEditText.getText().toString(), passwordEditText.getText().toString());
+            v.setEnabled(false);
+            usernameEditText.setEnabled(false);
+            passwordEditText.setEnabled(false);
+        });
     }
 
     @Override
@@ -125,7 +131,15 @@ public class LoginFragment extends BaseFragment {
                 navigator.openBrowse();
                 break;
             case LOGGED_OUT:
+                loginButton.setEnabled(true);
+                usernameEditText.setEnabled(true);
+                passwordEditText.setEnabled(true);
                 progressBar.setVisibility(View.GONE);
+                break;
+            case LOGIN_ERROR:
+                loginButton.setEnabled(true);
+                usernameEditText.setEnabled(true);
+                passwordEditText.setEnabled(true);
                 break;
         }
     }

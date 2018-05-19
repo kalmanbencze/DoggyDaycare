@@ -100,6 +100,7 @@ public class DogsFragment extends BaseFragment {
 
     @Override
     public void onStop() {
+        recyclerView.removeOnScrollListener(scrollListener);
         recyclerView.removeItemDecoration(itemDecoration);
         itemDecoration = null;
         recyclerView.setAdapter(null);
@@ -107,14 +108,6 @@ public class DogsFragment extends BaseFragment {
         subscriptions.clear();
         viewModel.onDetach();
         super.onStop();
-    }
-
-    @Override
-    public void onDestroyView() {
-        recyclerView.removeOnScrollListener(scrollListener);
-        recyclerView.setAdapter(null);
-        recyclerView.setLayoutManager(null);
-        super.onDestroyView();
     }
 
     @Override
