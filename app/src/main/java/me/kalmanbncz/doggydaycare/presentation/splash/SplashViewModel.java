@@ -12,7 +12,7 @@ import me.kalmanbncz.doggydaycare.presentation.BaseViewModel;
  */
 public class SplashViewModel implements BaseViewModel {
 
-    private static final long SPLASH_DELAY = 600;
+    private static final long SPLASH_DELAY = 1000;
 
     private final UserRepository userRepository;
 

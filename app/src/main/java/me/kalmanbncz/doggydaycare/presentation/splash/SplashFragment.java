@@ -7,7 +7,9 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import javax.inject.Inject;
 import me.kalmanbncz.doggydaycare.R;
 import me.kalmanbncz.doggydaycare.presentation.BaseFragment;
@@ -32,7 +34,10 @@ public class SplashFragment extends BaseFragment {
         super.onStart();
         subscriptions.clear();
         viewModel.onAttach();
-        subscriptions.add(viewModel.loggedIn().subscribe(this::forward));
+        subscriptions.add(viewModel.loggedIn()
+                              .subscribeOn(Schedulers.io())
+                              .observeOn(AndroidSchedulers.mainThread())
+                              .subscribe(this::forward));
     }
 
     @Override
@@ -58,7 +63,7 @@ public class SplashFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_splash, container, false);
+        View view = inflater.inflate(R.layout.fragment_splash, container, false);
 
         return view;
     }

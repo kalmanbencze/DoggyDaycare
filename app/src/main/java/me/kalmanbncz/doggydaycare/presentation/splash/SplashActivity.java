@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import javax.inject.Inject;
 import me.kalmanbncz.doggydaycare.R;
+import me.kalmanbncz.doggydaycare.di.SplashModule;
 import me.kalmanbncz.doggydaycare.di.scopes.ApplicationScope;
 import me.kalmanbncz.doggydaycare.di.scopes.flow.SplashFlowScope;
 import me.kalmanbncz.doggydaycare.presentation.BaseFragment;
@@ -29,6 +30,7 @@ public class SplashActivity extends AppCompatActivity implements SplashNavigator
         setContentView(R.layout.activity_splash);
         Scope splash = Toothpick.openScopes(ApplicationScope.class, SplashFlowScope.class);
         splash.bindScopeAnnotation(SplashFlowScope.class);
+        splash.installModules(new SplashModule());
         Toothpick.inject(this, splash);
     }
 

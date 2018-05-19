@@ -102,7 +102,7 @@ public class AuthNavigatorImpl implements AuthNavigator {
                 Toothpick.closeScope(scopeStack.pop().getName());
             }
             if (scopeStack.empty()) {
-                Log.d(TAG, "closeScope: closing BrowseFlowScope");
+                Log.d(TAG, "closeScope: closing AuthFlowScope");
                 Toothpick.closeScope(AuthFlowScope.class);
             }
         }

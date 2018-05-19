@@ -41,6 +41,13 @@ public class SplashNavigatorImpl implements SplashNavigator {
     public void openAuth() {
         Log.d(TAG, "openLogin: ");
         if (executor != null) {
+            while (!scopeStack.empty()) {
+                Scope scope = scopeStack.pop();
+                Toothpick.closeScope(scope.getName());
+                Log.d(TAG, "closeScope: closing " + scope.getName());
+            }
+            Log.d(TAG, "closeScope: closing SplashFlowScope");
+            Toothpick.closeScope(SplashFlowScope.class);
             Scope splash = Toothpick.openScopes(ApplicationScope.class, AuthFlowScope.class);
             splash.bindScopeAnnotation(AuthFlowScope.class);
             splash.installModules(new AuthModule());
@@ -53,6 +60,13 @@ public class SplashNavigatorImpl implements SplashNavigator {
     @Override
     public void openBrowse() {
         if (executor != null) {
+            while (!scopeStack.empty()) {
+                Scope scope = scopeStack.pop();
+                Toothpick.closeScope(scope.getName());
+                Log.d(TAG, "closeScope: closing " + scope.getName());
+            }
+            Log.d(TAG, "closeScope: closing SplashFlowScope");
+            Toothpick.closeScope(SplashFlowScope.class);
             Scope splash = Toothpick.openScopes(ApplicationScope.class, BrowseFlowScope.class);
             splash.bindScopeAnnotation(BrowseFlowScope.class);
             splash.installModules(new BrowseModule());
@@ -88,6 +102,10 @@ public class SplashNavigatorImpl implements SplashNavigator {
             this.executor.navigateBack();
             if (!scopeStack.empty()) {
                 Toothpick.closeScope(scopeStack.pop());
+            }
+            if (scopeStack.empty()) {
+                Log.d(TAG, "closeScope: closing SplashFlowScope");
+                Toothpick.closeScope(SplashFlowScope.class);
             }
         }
     }
