@@ -16,11 +16,6 @@ captures/
 .idea/
 .idea/tasks.xml
 *.jks
-google-services.json
-freeline.py
-freeline/
-freeline_project_description.json
-Jenkinsfile
 /gradle/
 gradle.properties
 gradlew.bat
