@@ -27,8 +27,6 @@ public class LoginViewModel implements BaseViewModel {
 
     private final UserRepository userRepository;
 
-    private final BehaviorSubject<LoginState> state = BehaviorSubject.create();
-
     private final CompositeDisposable subscriptions = new CompositeDisposable();
 
     private final BehaviorSubject<String> title = BehaviorSubject.create();
@@ -45,15 +43,11 @@ public class LoginViewModel implements BaseViewModel {
     LoginViewModel(ResourcesProvider resourcesProvider, UserRepository userRepository) {
         this.userRepository = userRepository;
         this.resourcesProvider = resourcesProvider;
-        state.onNext(LoginState.LOGGED_OUT);
-        title.onNext("Login");
+        title.onNext(resourcesProvider.getLoginScreenTitle());
     }
 
     @Override
     public void onAttach() {
-        subscriptions.clear();
-        subscriptions.add(userRepository.loadCurrentUser()
-                              .map(user -> user.isValid() ? LoginState.LOGGED_IN : LoginState.LOGGED_OUT).subscribe(state::onNext));
     }
 
     @Override
@@ -62,7 +56,8 @@ public class LoginViewModel implements BaseViewModel {
     }
 
     public Observable<LoginState> getLoginState() {
-        return state;
+        return userRepository.loadCurrentUser()
+            .map(user -> user.isValid() ? LoginState.LOGGED_IN : LoginState.LOGGED_OUT);
     }
 
     public Observable<Boolean> validator() {
@@ -79,7 +74,6 @@ public class LoginViewModel implements BaseViewModel {
     }
 
     public void logIn(String user, String password) {
-        state.onNext(LoginState.LOGGING_IN);
         subscriptions.add(userRepository.login(user, password).subscribe(loginResult -> {
             loggedIn(user, loginResult);
         }));

@@ -39,17 +39,17 @@ public class DogsViewModel extends RecyclerViewViewModel implements BaseViewMode
 
     private final Context context;
 
-    private final BehaviorSubject<String> title = BehaviorSubject.createDefault("");
+    private final BehaviorSubject<String> title = BehaviorSubject.create();
 
     private final BehaviorSubject<Boolean> loading = BehaviorSubject.createDefault(false);
 
     private CompositeDisposable subscriptions = new CompositeDisposable();
 
-    private BehaviorSubject<LoginState> state = BehaviorSubject.create();
-
     private ReplayProcessor<Integer> paginator = ReplayProcessor.create();
 
     private int pageIndex = 0;
+
+    private final Observable<String> snackbar = BehaviorSubject.create();
 
     @Inject
     DogsViewModel(BrowseNavigator browseNavigator, Context context, UserRepository userRepository, DogRepository dogRepository,
@@ -66,13 +66,6 @@ public class DogsViewModel extends RecyclerViewViewModel implements BaseViewMode
     public void onAttach() {
         adapter.setItems(new ArrayList<>());
         subscriptions.clear();
-        subscriptions.add(userRepository.loadCurrentUser().subscribe(user -> {
-            if (user.isValid()) {
-                state.onNext(LoginState.LOGGED_IN);
-            } else {
-                state.onNext(LoginState.LOGGED_OUT);
-            }
-        }));
         subscriptions.add(
             paginator.subscribeOn(Schedulers.computation())
                 .map(page -> {
@@ -133,5 +126,9 @@ public class DogsViewModel extends RecyclerViewViewModel implements BaseViewMode
             Log.d(TAG, "loadMoreItems: requesting page " + pageIndex);
             Schedulers.computation().scheduleDirect(() -> paginator.onNext(pageIndex));
         }
+    }
+
+    public Observable<String> getSnackbar() {
+        return snackbar;
     }
 }

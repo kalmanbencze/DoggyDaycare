@@ -44,6 +44,13 @@ public class BrowseNavigatorImpl implements BrowseNavigator {
     public void openAuth() {
         Log.d(TAG, "openLogin: ");
         if (executor != null) {
+            while (!scopeStack.empty()) {
+                Scope scope = scopeStack.pop();
+                Toothpick.closeScope(scope.getName());
+                Log.d(TAG, "closeScope: closing " + scope.getName());
+            }
+            Log.d(TAG, "closeScope: closing BrowseFlowScope");
+            Toothpick.closeScope(BrowseFlowScope.class);
             Scope splash = Toothpick.openScopes(ApplicationScope.class, AuthFlowScope.class);
             splash.bindScopeAnnotation(AuthFlowScope.class);
             splash.installModules(new AuthModule());
@@ -86,7 +93,13 @@ public class BrowseNavigatorImpl implements BrowseNavigator {
         if (executor != null) {
             this.executor.navigateBack();
             if (!scopeStack.empty()) {
-                Toothpick.closeScope(scopeStack.pop());
+                Scope scope = scopeStack.pop();
+                Toothpick.closeScope(scope.getName());
+                Log.d(TAG, "closeScope: closing " + scope.getName());
+            }
+            if (scopeStack.empty()) {
+                Log.d(TAG, "closeScope: closing BrowseFlowScope");
+                Toothpick.closeScope(BrowseFlowScope.class);
             }
         }
     }

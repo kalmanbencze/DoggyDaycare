@@ -1,5 +1,6 @@
 package me.kalmanbncz.doggydaycare.domain.dog;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import java.util.List;
 import me.kalmanbncz.doggydaycare.data.Breed;
@@ -16,5 +17,5 @@ public interface DogRepository {
 
     Observable<List<Breed>> getBreeds(int page);
 
-    void addOrUpdate(Dog dog);
+    Completable addOrUpdate(Dog dog);
 }

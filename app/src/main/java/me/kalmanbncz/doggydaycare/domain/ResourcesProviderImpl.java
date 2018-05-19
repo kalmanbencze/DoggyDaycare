@@ -56,4 +56,9 @@ public class ResourcesProviderImpl implements ResourcesProvider {
     public String getLoginErrorMessage() {
         return context.getString(R.string.login_error);
     }
+
+    @Override
+    public String getLoginScreenTitle() {
+        return context.getString(R.string.login_label);
+    }
 }

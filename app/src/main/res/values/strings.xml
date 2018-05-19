@@ -25,4 +25,5 @@
     <string name="create_label">Create Dog</string>
     <string name="edit_label">Edit Dog</string>
     <string name="login_error">Error logging in, please try again.</string>
+    <string name="done">Done</string>
 </resources>

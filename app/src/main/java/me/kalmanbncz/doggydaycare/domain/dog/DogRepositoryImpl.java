@@ -1,6 +1,7 @@
 package me.kalmanbncz.doggydaycare.domain.dog;
 
 import android.util.Log;
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -73,8 +74,9 @@ public class DogRepositoryImpl implements DogRepository {
     }
 
     @Override
-    public void addOrUpdate(Dog dog) {
-
+    public Completable addOrUpdate(Dog dog) {
+        //dogsRetrofitApi.putDog(dog);
+        return Completable.complete();
     }
 
     private Observable<List<Dog>> convertDogPageResponseToDogsList(DogsPageList dogsPageList) {

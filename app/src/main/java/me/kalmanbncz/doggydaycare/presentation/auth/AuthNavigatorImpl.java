@@ -70,6 +70,13 @@ public class AuthNavigatorImpl implements AuthNavigator {
     @Override
     public void openBrowse() {
         if (executor != null) {
+            while (!scopeStack.empty()) {
+                Scope scope = scopeStack.pop();
+                Toothpick.closeScope(scope.getName());
+                Log.d(TAG, "closeScope: closing " + scope.getName());
+            }
+            Log.d(TAG, "closeScope: closing AuthFlowScope");
+            Toothpick.closeScope(AuthFlowScope.class);
             Scope splash = Toothpick.openScopes(ApplicationScope.class, BrowseFlowScope.class);
             splash.bindScopeAnnotation(BrowseFlowScope.class);
             splash.installModules(new BrowseModule());
@@ -92,7 +99,11 @@ public class AuthNavigatorImpl implements AuthNavigator {
         if (executor != null) {
             this.executor.navigateBack();
             if (!scopeStack.empty()) {
-                Toothpick.closeScope(scopeStack.pop());
+                Toothpick.closeScope(scopeStack.pop().getName());
+            }
+            if (scopeStack.empty()) {
+                Log.d(TAG, "closeScope: closing BrowseFlowScope");
+                Toothpick.closeScope(AuthFlowScope.class);
             }
         }
     }

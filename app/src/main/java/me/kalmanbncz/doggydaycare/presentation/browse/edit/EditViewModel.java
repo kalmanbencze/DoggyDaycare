@@ -1,7 +1,8 @@
 package me.kalmanbncz.doggydaycare.presentation.browse.edit;
 
+import io.reactivex.Completable;
+import io.reactivex.Observable;
 import io.reactivex.subjects.BehaviorSubject;
-import io.reactivex.subjects.PublishSubject;
 import javax.inject.Inject;
 import me.kalmanbncz.doggydaycare.data.Dog;
 import me.kalmanbncz.doggydaycare.di.scopes.screen.EditScreenScope;
@@ -17,11 +18,11 @@ public class EditViewModel implements BaseViewModel {
 
     private final DogRepository dogRepository;
 
-    public PublishSubject<String> title = PublishSubject.create();
+    private final BehaviorSubject<String> title = BehaviorSubject.create();
 
-    public PublishSubject<String> snackbar = PublishSubject.create();
+    private final BehaviorSubject<String> snackbar = BehaviorSubject.create();
 
-    public BehaviorSubject<Boolean> loading = BehaviorSubject.create();
+    private final BehaviorSubject<Boolean> loading = BehaviorSubject.createDefault(false);
 
     private Dog dog;
 
@@ -30,7 +31,6 @@ public class EditViewModel implements BaseViewModel {
         this.dogRepository = dogRepository;
         this.dog = dog;
         title.onNext(dog.getId() < 0 ? resourcesProvider.getCreateScreenTitle() : resourcesProvider.getEditScreenTitle());
-        //snackbar.onNext("Editing");
         loading.onNext(true);
     }
 
@@ -44,7 +44,19 @@ public class EditViewModel implements BaseViewModel {
 
     }
 
-    private void changed() {
-        dogRepository.addOrUpdate(dog);
+    public Completable save() {
+        return dogRepository.addOrUpdate(dog);
+    }
+
+    public Observable<String> getTitle() {
+        return title;
+    }
+
+    public Observable<String> getSnackbar() {
+        return snackbar;
+    }
+
+    public Observable<Boolean> getLoading() {
+        return loading;
     }
 }

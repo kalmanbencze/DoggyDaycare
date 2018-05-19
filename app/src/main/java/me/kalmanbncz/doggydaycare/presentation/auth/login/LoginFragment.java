@@ -62,7 +62,7 @@ public class LoginFragment extends BaseFragment {
         viewModel.onAttach();
         subscriptions.add(viewModel.getLoginState().subscribe(this::onStateChanged, this::onError));
         subscriptions.add(viewModel.getTitle().subscribe(this::setTitle, this::onError));
-        subscriptions.add(viewModel.getSnackbar().subscribe(this::showSnackBar, this::onError));
+        subscriptions.add(viewModel.getSnackbar().subscribe(this::showSnackbar, this::onError));
         usernameEditText.addTextChangedListener(new TextWatcher() {
 
             @Override

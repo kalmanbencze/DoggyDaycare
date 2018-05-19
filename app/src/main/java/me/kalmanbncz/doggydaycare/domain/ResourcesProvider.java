@@ -22,4 +22,6 @@ public interface ResourcesProvider {
     String getWelcomeMessage(String user);
 
     String getLoginErrorMessage();
+
+    String getLoginScreenTitle();
 }

@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -87,15 +88,35 @@ public class DogsFragment extends BaseFragment {
         super.onStart();
         subscriptions.clear();
         viewModel.onAttach();
-        subscriptions.add(viewModel.getLoginState().distinctUntilChanged().subscribe(this::onStateChanged));
-        subscriptions.add(
-            viewModel.getLoadingState().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(this::loading));
-        subscriptions.add(viewModel.getTitle().subscribe(this::setTitle, this::onError));
+        subscriptions.add(viewModel.getLoginState()
+                              .distinctUntilChanged()
+                              .subscribeOn(Schedulers.io())
+                              .observeOn(AndroidSchedulers.mainThread())
+                              .subscribe(
+                                  this::onStateChanged,
+                                  this::onError));
+        subscriptions.add(viewModel.getLoadingState()
+                              .subscribeOn(Schedulers.io())
+                              .observeOn(AndroidSchedulers.mainThread())
+                              .subscribe(
+                                  this::loading,
+                                  this::onError));
+        subscriptions.add(viewModel.getTitle()
+                              .subscribeOn(Schedulers.io())
+                              .observeOn(AndroidSchedulers.mainThread())
+                              .subscribe(
+                                  this::setTitle,
+                                  this::onError));
+        subscriptions.add(viewModel.getSnackbar()
+                              .subscribe(
+                                  this::showSnackbar,
+                                  throwable -> Log.e(TAG, "Something went wrong, please try again later.", throwable)));
         LinearLayoutManager layoutManager = viewModel.createLayoutManager();
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(viewModel.getAdapter());
         itemDecoration = new VerticalSpaceItemDecoration((int) Util.dpToPx(getContext(), 1));
         recyclerView.addItemDecoration(itemDecoration);
+        recyclerView.addOnScrollListener(scrollListener);
     }
 
     @Override
