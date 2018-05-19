@@ -31,12 +31,10 @@ public interface DogsRetrofitApi {
     /**
      * Get the available breeds.
      *
-     * @param page the page at which to get the breeds
      * @param apiKey the api key of the api
      *
      * @return a {@link Call} object which will return the response {@link BreedJSONResponse}
      */
     @GET(BREED_URL)
-    Observable<BreedsJSONResponse> getBreeds(@Query("page") int page,
-                                             @Query("api_key") String apiKey);
+    Observable<BreedsJSONResponse> getBreeds(@Query("api_key") String apiKey);
 }

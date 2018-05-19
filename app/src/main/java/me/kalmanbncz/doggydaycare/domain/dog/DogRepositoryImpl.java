@@ -43,11 +43,11 @@ public class DogRepositoryImpl implements DogRepository {
      *
      * @return a {@link DogsPageList} with a list of dogs
      */
-    private Observable<DogsPageList> discoverDogsInternal(int page) {
+    private Observable<DogsPageList> retrieveDogsInternal(int page) {
         return dogsRetrofitApi.getDogs(page, apiKey)
             .subscribeOn(Schedulers.io())
             .map(this::mapToDogs)
-            .onErrorReturn(throwable -> new DogsPageList(new DogDiscoveryFailed(throwable)));
+            .onErrorReturn(throwable -> new DogsPageList(new DogsRetrievalFailed(throwable)));
     }
 
     /**
@@ -57,17 +57,15 @@ public class DogRepositoryImpl implements DogRepository {
      */
     public Observable<List<Dog>> getDogs(int page) {
         Log.d(TAG, "getBreeds: ");
-        return discoverDogsInternal(page).flatMap(this::convertDogPageResponseToDogsList);
+        return retrieveDogsInternal(page).flatMap(this::convertDogPageResponseToDogsList);
     }
 
     /**
-     * Make an API call for the details of the dog identified by {@code dogId}.
-     *
-     * @param page the id of the dog
+     * Make an API call for the available breeds.
      */
     @Override
-    public Observable<List<Breed>> getBreeds(int page) {
-        return dogsRetrofitApi.getBreeds(page, apiKey)
+    public Observable<List<Breed>> getBreeds() {
+        return dogsRetrofitApi.getBreeds(apiKey)
             .subscribeOn(Schedulers.io())
             .map(this::mapTBreed)
             .observeOn(AndroidSchedulers.mainThread());
@@ -119,24 +117,11 @@ public class DogRepositoryImpl implements DogRepository {
                                 dogs);
     }
 
-    private class DogDiscoveryFailed extends Throwable {
+    private class DogsRetrievalFailed extends Throwable {
 
         private Throwable throwable;
 
-        DogDiscoveryFailed(Throwable throwable) {
-            this.throwable = throwable;
-        }
-
-        public Throwable getThrowable() {
-            return throwable;
-        }
-    }
-
-    private class SimilarDogsException extends Throwable {
-
-        private Throwable throwable;
-
-        SimilarDogsException(Throwable throwable) {
+        DogsRetrievalFailed(Throwable throwable) {
             this.throwable = throwable;
         }
 

@@ -1,5 +1,7 @@
 package me.kalmanbncz.doggydaycare.data;
 
+import android.arch.persistence.room.TypeConverter;
+
 /**
  * Created by kalman.bencze on 18/05/2018.
  */
@@ -155,4 +157,71 @@ public class Dog {
     public void setWalkSched(String walkSched) {
         this.walkSched = walkSched;
     }
+
+    enum DogSize {
+        SMALL(0),
+        MEDIUM(1),
+        LARGE(2),
+        GIANT(3);
+
+        private final int code;
+
+        DogSize(int code) {
+            this.code = code;
+        }
+    }
+
+    enum Gender {
+        MALE(0),
+        FEMALE(1);
+
+        private final int code;
+
+        Gender(int code) {
+            this.code = code;
+        }
+    }
+
+    public static class DogSizeConverter {
+
+        @TypeConverter
+        public DogSize toSize(int size) {
+            if (size == DogSize.SMALL.code) {
+                return DogSize.SMALL;
+            } else if (size == DogSize.MEDIUM.code) {
+                return DogSize.MEDIUM;
+            } else if (size == DogSize.LARGE.code) {
+                return DogSize.LARGE;
+            } else if (size == DogSize.GIANT.code) {
+                return DogSize.GIANT;
+            } else {
+                throw new IllegalArgumentException("Could not recognize code");
+            }
+        }
+
+        @TypeConverter
+        public int toInteger(DogSize size) {
+            return size.code;
+        }
+    }
+
+    public static class GenderConverter {
+
+        @TypeConverter
+        public Gender toGender(int size) {
+            if (size == Gender.MALE.code) {
+                return Gender.MALE;
+            } else if (size == Gender.FEMALE.code) {
+                return Gender.FEMALE;
+            } else {
+                throw new IllegalArgumentException("Could not recognize gender");
+            }
+        }
+
+        @TypeConverter
+        public int toInteger(Gender gender) {
+            return gender.code;
+        }
+    }
+
 }

@@ -39,8 +39,16 @@ public class MockDogsRetrofitApi implements DogsRetrofitApi {
     }
 
     @Override
-    public Observable<BreedsJSONResponse> getBreeds(int page, String apiKey) {
+    public Observable<BreedsJSONResponse> getBreeds(String apiKey) {
         BreedsJSONResponse response = new BreedsJSONResponse();
+        response.page = 1;
+        response.results = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            BreedJSONResponse result = new BreedJSONResponse();
+            result.id = i;
+            result.name = "breed" + (i + 1);
+            response.results.add(result);
+        }
         return Observable.just(response);
     }
 }

@@ -15,7 +15,7 @@ public interface DogRepository {
 
     Observable<List<Dog>> getDogs(int page);
 
-    Observable<List<Breed>> getBreeds(int page);
+    Observable<List<Breed>> getBreeds();
 
     Completable addOrUpdate(Dog dog);
 }
