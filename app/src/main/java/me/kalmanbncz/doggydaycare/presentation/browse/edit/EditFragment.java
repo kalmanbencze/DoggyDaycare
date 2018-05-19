@@ -183,9 +183,9 @@ public class EditFragment extends BaseFragment {
         }
         setAdapterForSpinner(sizeSpinner, sizes, dog.getSize(), getString(R.string.size_hint_label));
 
-        List<Dog.Gender> genderlist = EnumUtils.getEnumList(Dog.Gender.class);
+        List<Dog.Gender> genderList = EnumUtils.getEnumList(Dog.Gender.class);
         List<String> genders = new ArrayList<>();
-        for (Dog.Gender size : genderlist) {
+        for (Dog.Gender size : genderList) {
             genders.add(size.code);
         }
         setAdapterForSpinner(genderSpinner, genders, dog.getGender(), getString(R.string.gender_hint_label));
