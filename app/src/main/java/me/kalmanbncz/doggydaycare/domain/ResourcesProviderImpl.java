@@ -31,4 +31,9 @@ public class ResourcesProviderImpl implements ResourcesProvider {
     public String getApiKey() {
         return context.getString(R.string.server_api_key);
     }
+
+    @Override
+    public String getDogsScreenTitle() {
+        return context.getString(R.string.dogs_label);
+    }
 }

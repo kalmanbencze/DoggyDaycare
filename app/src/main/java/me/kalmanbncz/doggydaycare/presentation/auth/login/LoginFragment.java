@@ -101,7 +101,7 @@ public class LoginFragment extends BaseFragment {
             }
         }));
         if (usernameEditText.getText().length() == 0) {
-            usernameEditText.setText("user");
+            usernameEditText.setText("user1");
             passwordEditText.setText("123456");
         }
         loginButton.setOnClickListener(v -> viewModel.logIn(usernameEditText.getText().toString(), passwordEditText.getText().toString()));

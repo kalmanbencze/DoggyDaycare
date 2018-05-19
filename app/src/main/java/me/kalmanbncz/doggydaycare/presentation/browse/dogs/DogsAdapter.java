@@ -3,6 +3,7 @@ package me.kalmanbncz.doggydaycare.presentation.browse.dogs;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +12,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import me.kalmanbncz.doggydaycare.R;
 import me.kalmanbncz.doggydaycare.data.Dog;
 import me.kalmanbncz.doggydaycare.presentation.ItemAdapter;
 import me.kalmanbncz.doggydaycare.presentation.browse.BrowseNavigator;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by kalman.bencze on 18/05/2018.
@@ -70,13 +73,42 @@ public class DogsAdapter extends ItemAdapter<Dog, DogItemViewModel> {
         @Override
         protected void setItem(Dog item) {
             super.setItem(item);
-            title.setText(viewModel.getItem().getName());
-            description.setText(viewModel.getItem().getBreed());
+            title.setText(item.getName());
+            description.setText(DogDescriptionFormatter.format(item));
         }
 
         @OnClick(R.id.item_dog_layout)
         void onClickVersionItem() {
             viewModel.onClick();
+        }
+    }
+
+    private static class DogDescriptionFormatter {
+
+        private static final String TAG = DogDescriptionFormatter.class.getSimpleName();
+
+        public static String format(Dog item) {
+            StringBuilder builder = new StringBuilder();
+            builder.append(StringUtils.capitalize(item.getBreed().toLowerCase().trim()))
+                .append(", ")
+                .append(formatYears(item.getYearOfBirth()))
+                .append("\n")
+                .append(StringUtils.capitalize(item.getGender().toLowerCase().trim()))
+                .append(", ")
+                .append((item.getGender().toLowerCase().trim().equals("male") ? "Neutered: " : "Spayed: ") +
+                            (item.isNeutered() ? "Yes" : "No"));
+            return builder.toString();
+        }
+
+        private static String formatYears(String yearOfBirth) {
+            int diff = 0;
+            try {
+                int year = Integer.parseInt(yearOfBirth);
+                diff = Calendar.getInstance().get(Calendar.YEAR) - year;
+            } catch (NumberFormatException e) {
+                Log.d(TAG, "formatYears: ");
+            }
+            return diff == 0 ? "few months old" : diff == 1 ? diff + " year old" : diff + " years old";
         }
     }
 }

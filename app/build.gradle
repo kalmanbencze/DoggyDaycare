@@ -14,6 +14,7 @@ android {
             annotationProcessorOptions {
                 arguments = [
                         'toothpick_registry_package_name': 'me.kalmanbncz.doggydaycare',
+                        "room.schemaLocation": "$projectDir/schemas".toString()
                 ]
             }
         }
@@ -49,19 +50,26 @@ dependencies {
     implementation "com.android.support:support-annotations:${ext.supportVersion}"
     implementation "com.github.bumptech.glide:glide:${ext.glideVersion}"
     implementation "de.hdodenhof:circleimageview:${ext.circleImageViewVersion}"
+    implementation 'org.apache.commons:commons-lang3:3.5'
+
+    implementation "android.arch.persistence.room:runtime:${ext.roomVersion}"
+    implementation "android.arch.persistence.room:rxjava2:${ext.roomVersion}"
+    implementation "android.arch.paging:runtime:${ext.pagingVersion}"
 
     implementation "com.squareup.retrofit2:retrofit:${ext.retrofitVersion}"
     implementation "com.squareup.retrofit2:converter-gson:${ext.retrofitVersion}"
     implementation "com.squareup.retrofit2:adapter-rxjava2:${ext.retrofitVersion}"
     implementation "com.github.stephanenicolas.toothpick:toothpick-runtime:${ext.toothpickVersion}"
     implementation "com.github.stephanenicolas.toothpick:smoothie:${ext.toothpickVersion}"
+
     annotationProcessor "com.github.stephanenicolas.toothpick:toothpick-compiler:${ext.toothpickVersion}"
     annotationProcessor "com.jakewharton:butterknife-compiler:${ext.butterknifeVersion}"
+    annotationProcessor "android.arch.persistence.room:compiler:${ext.roomVersion}"
+
     debugImplementation "com.squareup.leakcanary:leakcanary-android:${ext.leakCanaryVersion}"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${ext.leakCanaryVersion}"
 
     testImplementation "com.github.stephanenicolas.toothpick:toothpick-testing:${ext.toothpickVersion}"
-
     testImplementation 'org.easymock:easymock:3.4'
     testImplementation 'com.google.truth:truth:0.34'
     testImplementation 'org.powermock:powermock-easymock-release-full:1.6.4'

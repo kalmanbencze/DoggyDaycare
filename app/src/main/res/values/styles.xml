@@ -86,7 +86,7 @@
         parent="DefaultTextViewStyle">
         <item name="android:textColor">@color/colorPrimaryText</item>
         <item name="android:textSize">24sp</item>
-        <item name="android:maxLines">2</item>
+        <item name="android:maxLines">1</item>
     </style>
 
     <style name="SubtitleTextViewStyle"
@@ -103,5 +103,12 @@
     <style name="EditTextStyle"
         parent="Theme.AppCompat.Light">
         <item name="colorControlActivated">@color/colorPrimary</item>
+    </style>
+
+    <style name="ListItemTitleStyle"
+        parent="TitleTextViewStyle">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">18sp</item>
     </style>
 </resources>

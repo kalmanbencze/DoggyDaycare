@@ -12,4 +12,6 @@ public interface ResourcesProvider {
     String getString(@StringRes int id);
 
     String getApiKey();
+
+    String getDogsScreenTitle();
 }

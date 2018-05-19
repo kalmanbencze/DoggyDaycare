@@ -2,7 +2,6 @@ package me.kalmanbncz.doggydaycare.presentation.browse.dogs;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -10,12 +9,14 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.processors.ReplayProcessor;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
+import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import me.kalmanbncz.doggydaycare.data.Dog;
 import me.kalmanbncz.doggydaycare.data.LoginState;
 import me.kalmanbncz.doggydaycare.data.User;
 import me.kalmanbncz.doggydaycare.di.scopes.screen.DogsScreenScope;
+import me.kalmanbncz.doggydaycare.domain.ResourcesProvider;
 import me.kalmanbncz.doggydaycare.domain.dog.DogRepository;
 import me.kalmanbncz.doggydaycare.domain.user.UserRepository;
 import me.kalmanbncz.doggydaycare.presentation.BaseViewModel;
@@ -38,7 +39,7 @@ public class DogsViewModel extends RecyclerViewViewModel implements BaseViewMode
 
     private final Context context;
 
-    private final BehaviorSubject<String> title = BehaviorSubject.createDefault("My Dogs");
+    private final BehaviorSubject<String> title = BehaviorSubject.createDefault("");
 
     private final BehaviorSubject<Boolean> loading = BehaviorSubject.createDefault(false);
 
@@ -51,16 +52,19 @@ public class DogsViewModel extends RecyclerViewViewModel implements BaseViewMode
     private int pageIndex = 0;
 
     @Inject
-    DogsViewModel(BrowseNavigator browseNavigator, Context context, UserRepository userRepository, DogRepository dogRepository) {
+    DogsViewModel(BrowseNavigator browseNavigator, Context context, UserRepository userRepository, DogRepository dogRepository,
+                  ResourcesProvider resourcesProvider) {
         this.context = context;
         this.userRepository = userRepository;
         this.dogRepository = dogRepository;
         this.adapter = new DogsAdapter(browseNavigator);
+        this.title.onNext(resourcesProvider.getDogsScreenTitle());
         loadMoreItems();
     }
 
     @Override
     public void onAttach() {
+        adapter.setItems(new ArrayList<>());
         subscriptions.clear();
         subscriptions.add(userRepository.loadCurrentUser().subscribe(user -> {
             if (user.isValid()) {
@@ -112,7 +116,7 @@ public class DogsViewModel extends RecyclerViewViewModel implements BaseViewMode
     }
 
     @Override
-    protected RecyclerView.LayoutManager createLayoutManager() {
+    protected LinearLayoutManager createLayoutManager() {
         return new LinearLayoutManager(context);
     }
 

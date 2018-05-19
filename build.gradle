@@ -43,8 +43,8 @@ ext {
     appIntroVersion = '4.1.0'
     lifecycleVersion = '1.0.3'
     lifecycleExtVersion = '1.0.0'
-    pagingVersion = '1.0.0-alpha4-1'
-    roomVersion = '1.0.0'
+    pagingVersion = '1.0.0'
+    roomVersion = '1.1.0'
 
     //Testing
     robolectricVersion = '3.3.2'

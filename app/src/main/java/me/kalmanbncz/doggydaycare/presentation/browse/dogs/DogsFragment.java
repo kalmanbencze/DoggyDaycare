@@ -21,6 +21,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import javax.inject.Inject;
 import me.kalmanbncz.doggydaycare.R;
+import me.kalmanbncz.doggydaycare.Util;
 import me.kalmanbncz.doggydaycare.data.LoginState;
 import me.kalmanbncz.doggydaycare.presentation.BaseFragment;
 import me.kalmanbncz.doggydaycare.presentation.browse.BrowseNavigator;
@@ -62,6 +63,8 @@ public class DogsFragment extends BaseFragment {
 
     private CompositeDisposable subscriptions = new CompositeDisposable();
 
+    private VerticalSpaceItemDecoration itemDecoration;
+
     @Override
     public String getScreenTag() {
         return TAG;
@@ -88,12 +91,17 @@ public class DogsFragment extends BaseFragment {
         subscriptions.add(
             viewModel.getLoadingState().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(this::loading));
         subscriptions.add(viewModel.getTitle().subscribe(this::setTitle, this::onError));
-        recyclerView.setLayoutManager(viewModel.createLayoutManager());
+        LinearLayoutManager layoutManager = viewModel.createLayoutManager();
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(viewModel.getAdapter());
+        itemDecoration = new VerticalSpaceItemDecoration((int) Util.dpToPx(getContext(), 1));
+        recyclerView.addItemDecoration(itemDecoration);
     }
 
     @Override
     public void onStop() {
+        recyclerView.removeItemDecoration(itemDecoration);
+        itemDecoration = null;
         recyclerView.setAdapter(null);
         recyclerView.setLayoutManager(null);
         subscriptions.clear();
