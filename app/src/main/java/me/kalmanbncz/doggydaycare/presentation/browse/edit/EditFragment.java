@@ -24,6 +24,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import javax.inject.Inject;
 import me.kalmanbncz.doggydaycare.R;
@@ -31,6 +32,7 @@ import me.kalmanbncz.doggydaycare.data.Breed;
 import me.kalmanbncz.doggydaycare.data.Dog;
 import me.kalmanbncz.doggydaycare.presentation.BaseFragment;
 import me.kalmanbncz.doggydaycare.presentation.browse.BrowseNavigator;
+import org.apache.commons.lang3.EnumUtils;
 
 /**
  * Created by kalman.bencze on 18/05/2018.
@@ -87,8 +89,6 @@ public class EditFragment extends BaseFragment {
     @BindView(R.id.progress_bar)
     ContentLoadingProgressBar progressBar;
 
-    private View view;
-
     private CompositeDisposable subscriptions = new CompositeDisposable();
 
     @Override
@@ -106,7 +106,7 @@ public class EditFragment extends BaseFragment {
         super.onStart();
         Log.d(TAG, "onStart: ");
 
-        subscriptions.add(viewModel.getDogBreedsHolder()
+        subscriptions.add(viewModel.getDogAndBreedsHolder()
                               .subscribeOn(Schedulers.io())
                               .observeOn(AndroidSchedulers.mainThread())
                               .subscribe(
@@ -136,16 +136,16 @@ public class EditFragment extends BaseFragment {
     }
 
     @Override
+    public void onStop() {
+        subscriptions.clear();
+        super.onStop();
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.menu_edit, menu);
         super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public void onStop() {
-        subscriptions.clear();
-        super.onStop();
     }
 
     @Override
@@ -160,13 +160,40 @@ public class EditFragment extends BaseFragment {
 
     private void setDogInfoAndBreeds(DogAndBreedsHolder dogAndBreedsHolder) {
         Dog dog = dogAndBreedsHolder.getDog();
+        nameEditText.setText(dog.getName());
+
         List<Breed> breeds = dogAndBreedsHolder.getBreeds();
         List<String> converted = new ArrayList<>();
         for (Breed breed : breeds) {
             converted.add(breed.getName());
         }
-        nameEditText.setText(dog.getName());
         setAdapterForSpinner(breedSpinner, converted, dog.getBreed(), getString(R.string.breed_hint_label));
+
+        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+        List<String> years = new ArrayList<>();
+        for (int i = currentYear; i > currentYear - 20; i--) {
+            years.add(String.valueOf(i));
+        }
+        setAdapterForSpinner(birthdateSpinner, years, dog.getYearOfBirth(), getString(R.string.birth_year_hint_label));
+
+        List<Dog.DogSize> enumlist = EnumUtils.getEnumList(Dog.DogSize.class);
+        List<String> sizes = new ArrayList<>();
+        for (Dog.DogSize size : enumlist) {
+            sizes.add(size.code);
+        }
+        setAdapterForSpinner(sizeSpinner, sizes, dog.getSize(), getString(R.string.size_hint_label));
+
+        List<Dog.Gender> genderlist = EnumUtils.getEnumList(Dog.Gender.class);
+        List<String> genders = new ArrayList<>();
+        for (Dog.Gender size : genderlist) {
+            genders.add(size.code);
+        }
+        setAdapterForSpinner(genderSpinner, genders, dog.getGender(), getString(R.string.gender_hint_label));
+
+        commandsEditText.setText(dog.getCommands());
+        eatingEditText.setText(dog.getEatingSched());
+        walkingEditText.setText(dog.getWalkSched());
+        sleepingEditText.setText(dog.getSleepSched());
     }
 
     public void setAdapterForSpinner(AppCompatSpinner spinner, List<String> items, String selected, String hint) {
@@ -177,8 +204,9 @@ public class EditFragment extends BaseFragment {
                 return super.getCount() - 1; // you dont display last item. It is used as hint.
             }
 
+            @NonNull
             @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
+            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
 
                 View v = super.getView(position, convertView, parent);
                 if (position == getCount()) {
@@ -217,8 +245,7 @@ public class EditFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_edit, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_edit, container, false);
     }
 
     private void onSaved() {

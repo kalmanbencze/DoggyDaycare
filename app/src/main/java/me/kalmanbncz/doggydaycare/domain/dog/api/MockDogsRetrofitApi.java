@@ -22,11 +22,11 @@ public class MockDogsRetrofitApi implements DogsRetrofitApi {
                 result.id = i;
                 result.name = "name" + (i + 1);
                 result.breed = "breed" + (i + 1);
-                result.gender = i % 2 == 0 ? "male" : "female";
+                result.gender = i % 2 == 0 ? "Male" : "Female";
                 result.neutered = new Random().nextBoolean();
                 result.friendly = new Random().nextBoolean();
                 result.vaccinated = new Random().nextBoolean();
-                result.size = i % 2 == 0 ? "small" : "large";
+                result.size = i % 2 == 0 ? "Small" : "Large";
                 result.yearOfBirth = i % 2 == 0 ? "2014" : "2016";
                 result.commands = i % 2 == 0 ? "Sit, stay." : "sit, stay, jump, low, roll.";
                 result.walkSched = i % 2 == 0 ? "Daily in the evening." : "Every two days.";

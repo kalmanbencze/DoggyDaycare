@@ -2,7 +2,6 @@ package me.kalmanbncz.doggydaycare.presentation.auth.register;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
 import javax.inject.Inject;
@@ -23,8 +22,6 @@ public class RegisterViewModel {
     //    private static final String PASSWORD_REGEX = "/^.{4,}$/";
 
     private final UserRepository userRepository;
-
-    private final CompositeDisposable subscriptions = new CompositeDisposable();
 
     private final BehaviorSubject<String> title = BehaviorSubject.create();
 

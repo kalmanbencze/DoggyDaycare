@@ -37,7 +37,7 @@ public class EditViewModel {
         title.onNext(dog.getId() < 0 ? resourcesProvider.getCreateScreenTitle() : resourcesProvider.getEditScreenTitle());
     }
 
-    public Observable<DogAndBreedsHolder> getDogBreedsHolder() {
+    public Observable<DogAndBreedsHolder> getDogAndBreedsHolder() {
         return Observable.combineLatest(dogObservable, getBreeds(), DogAndBreedsHolder::new);
     }
 

@@ -28,4 +28,7 @@
     <string name="done">Done</string>
     <string name="error_message">Something went wrong, please try again later.</string>
     <string name="breed_hint_label">Breed*</string>
+    <string name="birth_year_hint_label">Year of birth*</string>
+    <string name="size_hint_label">Dog Size*</string>
+    <string name="gender_hint_label">Gender*</string>
 </resources>

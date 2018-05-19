@@ -158,26 +158,26 @@ public class Dog {
         this.walkSched = walkSched;
     }
 
-    enum DogSize {
-        SMALL(0),
-        MEDIUM(1),
-        LARGE(2),
-        GIANT(3);
+    public enum DogSize {
+        SMALL("Small"),
+        MEDIUM("Medium"),
+        LARGE("Large"),
+        GIANT("Giant");
 
-        private final int code;
+        public final String code;
 
-        DogSize(int code) {
+        DogSize(String code) {
             this.code = code;
         }
     }
 
-    enum Gender {
-        MALE(0),
-        FEMALE(1);
+    public enum Gender {
+        MALE("Male"),
+        FEMALE("Female");
 
-        private final int code;
+        public final String code;
 
-        Gender(int code) {
+        Gender(String code) {
             this.code = code;
         }
     }
@@ -185,14 +185,14 @@ public class Dog {
     public static class DogSizeConverter {
 
         @TypeConverter
-        public DogSize toSize(int size) {
-            if (size == DogSize.SMALL.code) {
+        public DogSize toSize(String size) {
+            if (size.equals(DogSize.SMALL.code)) {
                 return DogSize.SMALL;
-            } else if (size == DogSize.MEDIUM.code) {
+            } else if (size.equals(DogSize.MEDIUM.code)) {
                 return DogSize.MEDIUM;
-            } else if (size == DogSize.LARGE.code) {
+            } else if (size.equals(DogSize.LARGE.code)) {
                 return DogSize.LARGE;
-            } else if (size == DogSize.GIANT.code) {
+            } else if (size.equals(DogSize.GIANT.code)) {
                 return DogSize.GIANT;
             } else {
                 throw new IllegalArgumentException("Could not recognize code");
@@ -200,7 +200,7 @@ public class Dog {
         }
 
         @TypeConverter
-        public int toInteger(DogSize size) {
+        public String toString(DogSize size) {
             return size.code;
         }
     }
@@ -208,10 +208,10 @@ public class Dog {
     public static class GenderConverter {
 
         @TypeConverter
-        public Gender toGender(int size) {
-            if (size == Gender.MALE.code) {
+        public Gender toGender(String size) {
+            if (size.equals(Gender.MALE.code)) {
                 return Gender.MALE;
-            } else if (size == Gender.FEMALE.code) {
+            } else if (size.equals(Gender.FEMALE.code)) {
                 return Gender.FEMALE;
             } else {
                 throw new IllegalArgumentException("Could not recognize gender");
@@ -219,7 +219,7 @@ public class Dog {
         }
 
         @TypeConverter
-        public int toInteger(Gender gender) {
+        public String toString(Gender gender) {
             return gender.code;
         }
     }
