@@ -97,4 +97,8 @@ public class DogsViewModel extends RecyclerViewViewModel {
     public Observable<String> getSnackbar() {
         return snackbar;
     }
+
+    public Observable<String> getUser() {
+        return userRepository.loadCurrentUser().map(User::getUsername);
+    }
 }

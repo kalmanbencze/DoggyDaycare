@@ -98,6 +98,7 @@ public class EditFragment extends BaseFragment {
         ButterKnife.bind(this, view);
         if (getActivity() != null) {
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+            toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
         }
         setHasOptionsMenu(true);
     }
@@ -183,6 +184,10 @@ public class EditFragment extends BaseFragment {
             sizes.add(size.code);
         }
         setAdapterForSpinner(sizeSpinner, sizes, dog.getSize(), getString(R.string.size_hint_label));
+
+        vaccinationsCheckbox.setChecked(dog.isVaccinated());
+        neuteredCheckbox.setChecked(dog.isNeutered());
+        friendlyCheckbox.setChecked(dog.isFriendly());
 
         List<Dog.Gender> genderList = EnumUtils.getEnumList(Dog.Gender.class);
         List<String> genders = new ArrayList<>();

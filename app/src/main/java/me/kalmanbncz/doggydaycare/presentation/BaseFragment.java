@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,12 +16,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import me.kalmanbncz.doggydaycare.R;
 
 /**
  * Created by kalman.bencze on 18/05/2018.
  */
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment implements FragmentManager.OnBackStackChangedListener {
 
     private static final String TAG = "LoginFragment";
 
@@ -43,7 +45,30 @@ public abstract class BaseFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+
+        ButterKnife.bind(this, view);
+        if (getActivity() != null) {
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+            toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
+        }
+        return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (getFragmentManager() != null) {
+            getFragmentManager().addOnBackStackChangedListener(this);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        if (getFragmentManager() != null) {
+            getFragmentManager().removeOnBackStackChangedListener(this);
+        }
+        super.onStop();
     }
 
     public ActionBar getActionBar() {
@@ -103,5 +128,16 @@ public abstract class BaseFragment extends Fragment {
 
     public void showSnackbar(String s) {
         showSnackbar(s, Snackbar.LENGTH_SHORT);
+    }
+
+    @Override
+    public void onBackStackChanged() {
+        boolean navigationStackIsEmpty;
+        if (getFragmentManager() != null) {
+            navigationStackIsEmpty = getFragmentManager().getBackStackEntryCount() <= 1;
+            if (getActionBar() != null) {
+                getActionBar().setDisplayHomeAsUpEnabled(!navigationStackIsEmpty);
+            }
+        }
     }
 }

@@ -4,13 +4,6 @@
     tools:context="me.kalmanbncz.doggydaycare.presentation.browse.BrowseActivity"
     >
     <item
-        android:id="@+id/action_logout"
-        android:icon="@drawable/vector_logout"
-        android:orderInCategory="100"
-        android:title="@string/action_logout"
-        app:showAsAction="ifRoom"
-        />
-    <item
         android:id="@+id/action_add"
         android:orderInCategory="100"
         android:title="@string/add"

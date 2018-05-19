@@ -31,4 +31,8 @@
     <string name="birth_year_hint_label">Year of birth*</string>
     <string name="size_hint_label">Dog Size*</string>
     <string name="gender_hint_label">Gender*</string>
+    <string name="logout_title_label">Log out?</string>
+    <string name="log_out_confirmation_message">Do you really want to log out?</string>
+    <string name="yes_label">Yes</string>
+    <string name="no_label">No</string>
 </resources>

@@ -3,7 +3,11 @@ package me.kalmanbncz.doggydaycare.presentation.browse.dogs;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.ContentLoadingProgressBar;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -39,6 +44,12 @@ public class DogsFragment extends BaseFragment {
 
     @BindView(R.id.toolbar)
     protected Toolbar toolbar;
+
+    @BindView(R.id.drawer_layout)
+    protected DrawerLayout drawerLayout;
+
+    @BindView(R.id.navigation_view)
+    protected NavigationView navigationView;
 
     @Inject
     BrowseNavigator browseNavigator;
@@ -85,7 +96,7 @@ public class DogsFragment extends BaseFragment {
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         }
         setHasOptionsMenu(true);
-
+        initializeSideMenuDrawer();
         adapter = new DogsAdapter(browseNavigator);
         return view;
     }
@@ -101,6 +112,14 @@ public class DogsFragment extends BaseFragment {
                               .observeOn(AndroidSchedulers.mainThread())
                               .subscribe(
                                   this::onStateChanged,
+                                  this::onError));
+
+        subscriptions.add(viewModel.getUser()
+                              .distinctUntilChanged()
+                              .subscribeOn(Schedulers.io())
+                              .observeOn(AndroidSchedulers.mainThread())
+                              .subscribe(
+                                  this::onUserNameChanged,
                                   this::onError));
 
         subscriptions.add(viewModel.getLoadingState()
@@ -139,6 +158,13 @@ public class DogsFragment extends BaseFragment {
         recyclerView.addOnScrollListener(scrollListener);
     }
 
+    private void onUserNameChanged(String username) {
+        View headerView = navigationView.getHeaderView(0);
+
+        TextView usernameTextView = headerView.findViewById(R.id.user_textview);
+        usernameTextView.setText(username);
+    }
+
     private void addDogs(List<Dog> dogs) {
         adapter.addItems(dogs);
     }
@@ -164,9 +190,6 @@ public class DogsFragment extends BaseFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_logout:
-                viewModel.logout();
-                return true;
             case R.id.action_add:
                 browseNavigator.openAdd();
                 return true;
@@ -192,5 +215,37 @@ public class DogsFragment extends BaseFragment {
                 browseNavigator.openAuth();
                 break;
         }
+    }
+
+    private void initializeSideMenuDrawer() {
+
+
+        /* Setting Navigation View Item Selected Listener to handle the item click of the
+         navigation menu. This method will trigger on item Click of navigation menu
+         */
+        navigationView.setNavigationItemSelectedListener(item -> {
+            // Closing drawer on item click
+            drawerLayout.closeDrawers();
+            switch (item.getItemId()) {
+                case R.id.navigation_about:
+                    showSnackbar("About Selected");
+                case R.id.navigation_logout:
+                    new AlertDialog.Builder(getContext())
+                        .setTitle(R.string.logout_title_label)
+                        .setMessage(R.string.log_out_confirmation_message)
+                        .setPositiveButton(R.string.yes_label, (dialogInterface, i) -> viewModel.logout())
+                        .setNegativeButton(R.string.no_label, (dialogInterface, i) -> dialogInterface.cancel())
+                        .show();
+            }
+            return true;
+        });
+
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(getActivity(),
+                                                                                drawerLayout, toolbar, R.string.app_name,
+                                                                                R.string.app_name);
+        // Setting the actionbarToggle to drawer layout
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        // Calling sync state is necessary or else your hamburger icon won't show up
+        actionBarDrawerToggle.syncState();
     }
 }
