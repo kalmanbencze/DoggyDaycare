@@ -10,4 +10,13 @@
     <string name="refresh">Refresh</string>
     <string name="action_logout">Logout</string>
     <string name="add">Add dog</string>
+    <string name="header_basic_information_label">Basic Information</string>
+    <string name="name_field_hint_label">Dog Name*</string>
+    <string name="vaccinations_label">Vaccinations up to date</string>
+    <string name="neutered_label">Neutered/Spayed</string>
+    <string name="friendly_label">Friendly with other dogs</string>
+    <string name="commands_hint_label">Commands the dog responds to</string>
+    <string name="eating_schedule_hint_label">Eating schedule</string>
+    <string name="walking_schedule_hint_label">Walking schedule</string>
+    <string name="sleeping_schedule_hint_label">When does the dog sleep</string>
 </resources>

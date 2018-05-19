@@ -4,28 +4,206 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="Scroll"
     android:background="@color/list_background_grey"
+    tools:ignore="Autofill"
     >
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         >
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingBottom="30dp"
             >
-            <EditText
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardView1"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/nameEditTextHeight"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                style="@style/EditTextStyle"
+                android:layout_height="wrap_content"
+                android:elevation="@dimen/default_elevation"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="-5dp"
+                android:layout_marginRight="-5dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                >
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/name_field_hint_label"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginBottom="25dp"
+                    android:layout_marginStart="35dp"
+                    android:layout_marginEnd="35dp"
+                    android:minWidth="220dp"
+                    android:textSize="20sp"
+                    android:fontFamily="sans-serif"
+                    style="@style/EditTextStyle"
+                    android:inputType="textCapWords"
+                    />
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                android:id="@+id/basic_info_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/cardView1"
+                style="@style/ListHeaderStyle"
+                android:text="@string/header_basic_information_label"
                 />
-        </LinearLayout>
-    </ScrollView>
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="@dimen/default_elevation"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="-5dp"
+                android:layout_marginRight="-5dp"
+                app:layout_constraintTop_toBottomOf="@+id/basic_info_header"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:id="@+id/cardView2"
+                >
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="25dp"
+                    android:paddingBottom="25dp"
+                    android:paddingStart="40dp"
+                    android:paddingEnd="40dp"
+                    android:orientation="vertical"
+                    >
+
+                    <android.support.v7.widget.AppCompatSpinner
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:id="@+id/breed_spinner"
+                        style="@style/Base.Widget.AppCompat.Spinner.Underlined"
+                        app:layout_constraintTop_toTopOf="parent"
+                        />
+
+                    <android.support.v7.widget.AppCompatSpinner
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        app:layout_constraintTop_toBottomOf="@id/breed_spinner"
+                        android:id="@+id/birthdate_spinner"
+                        android:layout_marginTop="15dp"
+                        style="@style/Base.Widget.AppCompat.Spinner.Underlined"
+                        />
+
+                    <android.support.v7.widget.AppCompatSpinner
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        app:layout_constraintTop_toBottomOf="@id/birthdate_spinner"
+                        android:id="@+id/size_spinner"
+                        android:layout_marginTop="15dp"
+                        style="@style/Base.Widget.AppCompat.Spinner.Underlined"
+                        />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:text="@string/vaccinations_label"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:gravity="center"
+                        app:layout_constraintTop_toTopOf="@+id/vaccinations_checkbox"
+                        app:layout_constraintBottom_toTopOf="@+id/neutered_checkbox"
+                        />
+                    <android.support.v7.widget.AppCompatCheckBox
+                        android:id="@+id/vaccinations_checkbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/size_spinner"
+                        android:layout_marginTop="30dp"
+                        style="@style/Widget.AppCompat.CompoundButton.CheckBox"
+                        />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:text="@string/neutered_label"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:gravity="center"
+                        app:layout_constraintTop_toTopOf="@+id/neutered_checkbox"
+                        />
+                    <android.support.v7.widget.AppCompatCheckBox
+                        android:id="@+id/neutered_checkbox"
+                        android:layout_width="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/vaccinations_checkbox"
+                        android:layout_height="48dp"
+                        style="@style/Widget.AppCompat.CompoundButton.CheckBox"
+                        />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:text="@string/friendly_label"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:gravity="center"
+                        app:layout_constraintTop_toTopOf="@+id/friendly_checkbox"
+                        />
+                    <android.support.v7.widget.AppCompatCheckBox
+                        android:id="@+id/friendly_checkbox"
+                        app:layout_constraintTop_toBottomOf="@id/neutered_checkbox"
+                        android:layout_width="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_height="48dp"
+                        style="@style/Widget.AppCompat.CompoundButton.CheckBox"
+                        />
+
+                    <android.support.v7.widget.AppCompatSpinner
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        app:layout_constraintTop_toBottomOf="@id/friendly_checkbox"
+                        android:id="@+id/gender_spinner"
+                        android:layout_marginTop="30dp"
+                        style="@style/Base.Widget.AppCompat.Spinner.Underlined"
+                        />
+
+                    <EditText
+                        android:id="@+id/commands_edittext"
+                        app:layout_constraintTop_toBottomOf="@id/gender_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/commands_hint_label"
+                        android:layout_marginTop="15dp"
+                        style="@style/EditTextStyle"
+                        />
+                    <EditText
+                        android:id="@+id/eating_edittext"
+                        app:layout_constraintTop_toBottomOf="@id/commands_edittext"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:hint="@string/eating_schedule_hint_label"
+                        style="@style/EditTextStyle"
+                        />
+                    <EditText
+                        android:id="@+id/walking_edittext"
+                        app:layout_constraintTop_toBottomOf="@id/eating_edittext"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:hint="@string/walking_schedule_hint_label"
+                        style="@style/EditTextStyle"
+                        />
+                    <EditText
+                        android:id="@+id/sleeping_edittext"
+                        app:layout_constraintTop_toBottomOf="@id/walking_edittext"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:hint="@string/sleeping_schedule_hint_label"
+                        style="@style/EditTextStyle"
+                        />
+                </android.support.constraint.ConstraintLayout>
+            </android.support.v7.widget.CardView>
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
