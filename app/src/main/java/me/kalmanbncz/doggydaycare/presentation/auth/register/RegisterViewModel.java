@@ -1,20 +1,22 @@
 package me.kalmanbncz.doggydaycare.presentation.auth.register;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.PublishSubject;
 import javax.inject.Inject;
 import me.kalmanbncz.doggydaycare.data.LoginResult;
 import me.kalmanbncz.doggydaycare.data.LoginState;
 import me.kalmanbncz.doggydaycare.di.scopes.screen.LoginScreenScope;
+import me.kalmanbncz.doggydaycare.domain.ResourcesProvider;
 import me.kalmanbncz.doggydaycare.domain.user.UserRepository;
-import me.kalmanbncz.doggydaycare.presentation.BaseViewModel;
 
 /**
  * Created by kalman.bencze on 18/05/2018.
  */
 @LoginScreenScope
-public class RegisterViewModel implements BaseViewModel {
+public class RegisterViewModel {
 
     //    private static final String USERNAME_REGEX = "/^.{4,}$/";
     //
@@ -22,42 +24,28 @@ public class RegisterViewModel implements BaseViewModel {
 
     private final UserRepository userRepository;
 
-    private final BehaviorSubject<LoginState> state = BehaviorSubject.create();
-
     private final CompositeDisposable subscriptions = new CompositeDisposable();
 
     private final BehaviorSubject<String> title = BehaviorSubject.create();
+
+    private final ResourcesProvider resourcesProvider;
+
+    public PublishSubject<String> snackbar = PublishSubject.create();
 
     private BehaviorSubject<String> usernameSubject = BehaviorSubject.create();
 
     private BehaviorSubject<String> passwordSubject = BehaviorSubject.create();
 
     @Inject
-    RegisterViewModel(UserRepository userRepository) {
+    RegisterViewModel(ResourcesProvider resourcesProvider, UserRepository userRepository) {
+        this.resourcesProvider = resourcesProvider;
         this.userRepository = userRepository;
-        state.onNext(LoginState.LOGGED_OUT);
-        title.onNext("Login");
-    }
-
-    @Override
-    public void onAttach() {
-        subscriptions.clear();
-        subscriptions.add(userRepository.loadCurrentUser().subscribe(user -> {
-            if (user.isValid()) {
-                state.onNext(LoginState.LOGGED_IN);
-            } else {
-                state.onNext(LoginState.LOGGED_OUT);
-            }
-        }));
-    }
-
-    @Override
-    public void onDetach() {
-        subscriptions.clear();
+        title.onNext("Register");
     }
 
     public Observable<LoginState> getLoginState() {
-        return state;
+        return userRepository.loadCurrentUser()
+            .map(user -> user.isValid() ? LoginState.LOGGED_IN : LoginState.LOGGED_OUT);
     }
 
     public Observable<Boolean> validator() {
@@ -73,9 +61,17 @@ public class RegisterViewModel implements BaseViewModel {
         return userMatches && passwordMatches;
     }
 
-    public void logIn(String user, String password) {
-        state.onNext(LoginState.LOGGING_IN);
-        subscriptions.add(userRepository.login(user, password).map(this::mapLoginResult).subscribe(state::onNext));
+    public Completable logIn(String user, String password) {
+        return userRepository.login(user, password)
+            .flatMapCompletable(loginResult -> {
+                if (loginResult.isSuccess()) {
+                    return Completable.complete();
+                } else {
+                    return Completable.error(loginResult.getError());
+                }
+            })
+            .doOnComplete(() -> snackbar.onNext(resourcesProvider.getWelcomeMessage(user)))
+            .doOnError(throwable -> snackbar.onNext(resourcesProvider.getLoginErrorMessage()));
     }
 
     private LoginState mapLoginResult(LoginResult loginResult) {

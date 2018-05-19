@@ -28,7 +28,7 @@ public class UserCacheImpl implements UserCache {
 
     private final SharedPreferences preferences;
 
-    private BehaviorSubject<User> user = BehaviorSubject.create();
+    private final BehaviorSubject<User> user = BehaviorSubject.create();
 
     @Inject
     UserCacheImpl(Context context) {

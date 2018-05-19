@@ -2,7 +2,6 @@ package me.kalmanbncz.doggydaycare.domain.user;
 
 import android.util.Log;
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import javax.inject.Inject;
 import me.kalmanbncz.doggydaycare.data.LoginResult;
@@ -49,13 +48,18 @@ public class UserRepositoryImpl implements UserRepository {
         return userRetrofitApi.requestAccessToken(apiKey)
             .subscribeOn(Schedulers.io())
             .flatMap(requestTokenResponse -> {
-                userCache.setCurrentUser(new User(0, username, requestTokenResponse.requestToken));//todo hardcoded id 0
                 return userRetrofitApi.login(apiKey, requestTokenResponse.requestToken, username, password)
-                    .subscribeOn(Schedulers.io())
                     .map(UserRepositoryImpl.this::mapLoginResponse)
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnError(throwable -> userCache.removeCurrentUser())
+                    .doOnNext(loginResult -> {
+                        if (loginResult.isSuccess()) {
+                            userCache.setCurrentUser(new User(0, username, requestTokenResponse.requestToken));//todo hardcoded id 0
+                        } else {
+                            userCache.removeCurrentUser();
+                        }
+                    })
                     .onErrorReturn(throwable -> new LoginResult(new LoginFailed(throwable)));
-            })
+            }).doOnError(throwable -> userCache.removeCurrentUser())
             .onErrorReturn(throwable -> new LoginResult(new RequestTokenFailed(throwable)));
     }
 

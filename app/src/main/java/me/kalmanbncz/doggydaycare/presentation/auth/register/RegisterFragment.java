@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,9 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import javax.inject.Inject;
 import me.kalmanbncz.doggydaycare.R;
 import me.kalmanbncz.doggydaycare.data.LoginState;
@@ -59,7 +62,6 @@ public class RegisterFragment extends BaseFragment {
     public void onStart() {
         super.onStart();
         subscriptions.clear();
-        viewModel.onAttach();
         subscriptions.add(viewModel.getLoginState().subscribe(this::onStateChanged, this::onError));
         subscriptions.add(viewModel.getTitle().subscribe(this::setTitle, this::onError));
         usernameEditText.addTextChangedListener(new TextWatcher() {
@@ -102,13 +104,21 @@ public class RegisterFragment extends BaseFragment {
         }));
         usernameEditText.setText("user");
         passwordEditText.setText("123456");
-        loginButton.setOnClickListener(v -> viewModel.logIn(usernameEditText.getText().toString(), passwordEditText.getText().toString()));
+        loginButton.setOnClickListener(v -> {
+            subscriptions.add(viewModel.logIn(usernameEditText.getText().toString(), passwordEditText.getText().toString())
+                                  .subscribeOn(Schedulers.io())
+                                  .observeOn(AndroidSchedulers.mainThread())
+                                  .subscribe(this::onCompleted, this::onError));
+        });
+    }
+
+    private void onCompleted() {
+        Log.d(TAG, "onCompleted: ");
     }
 
     @Override
     public void onStop() {
         subscriptions.clear();
-        viewModel.onDetach();
         super.onStop();
     }
 

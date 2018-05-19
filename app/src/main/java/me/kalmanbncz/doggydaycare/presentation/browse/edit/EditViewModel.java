@@ -10,13 +10,12 @@ import me.kalmanbncz.doggydaycare.data.Dog;
 import me.kalmanbncz.doggydaycare.di.scopes.screen.EditScreenScope;
 import me.kalmanbncz.doggydaycare.domain.ResourcesProvider;
 import me.kalmanbncz.doggydaycare.domain.dog.DogRepository;
-import me.kalmanbncz.doggydaycare.presentation.BaseViewModel;
 
 /**
  * Created by kalman.bencze on 18/05/2018.
  */
 @EditScreenScope
-public class EditViewModel implements BaseViewModel {
+public class EditViewModel {
 
     private final DogRepository dogRepository;
 
@@ -36,16 +35,6 @@ public class EditViewModel implements BaseViewModel {
         this.dog = dog;
         this.dogObservable = Observable.just(dog);
         title.onNext(dog.getId() < 0 ? resourcesProvider.getCreateScreenTitle() : resourcesProvider.getEditScreenTitle());
-    }
-
-    @Override
-    public void onAttach() {
-
-    }
-
-    @Override
-    public void onDetach() {
-
     }
 
     public Observable<DogAndBreedsHolder> getDogBreedsHolder() {

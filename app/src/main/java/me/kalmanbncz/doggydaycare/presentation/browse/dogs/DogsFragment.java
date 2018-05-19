@@ -20,9 +20,12 @@ import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import java.util.ArrayList;
+import java.util.List;
 import javax.inject.Inject;
 import me.kalmanbncz.doggydaycare.R;
 import me.kalmanbncz.doggydaycare.Util;
+import me.kalmanbncz.doggydaycare.data.Dog;
 import me.kalmanbncz.doggydaycare.data.LoginState;
 import me.kalmanbncz.doggydaycare.presentation.BaseFragment;
 import me.kalmanbncz.doggydaycare.presentation.browse.BrowseNavigator;
@@ -66,6 +69,8 @@ public class DogsFragment extends BaseFragment {
 
     private VerticalSpaceItemDecoration itemDecoration;
 
+    private DogsAdapter adapter;
+
     @Override
     public String getScreenTag() {
         return TAG;
@@ -80,14 +85,16 @@ public class DogsFragment extends BaseFragment {
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         }
         setHasOptionsMenu(true);
+
+        adapter = new DogsAdapter(browseNavigator);
         return view;
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        adapter.setItems(new ArrayList<>());
         subscriptions.clear();
-        viewModel.onAttach();
         subscriptions.add(viewModel.getLoginState()
                               .distinctUntilChanged()
                               .subscribeOn(Schedulers.io())
@@ -95,28 +102,45 @@ public class DogsFragment extends BaseFragment {
                               .subscribe(
                                   this::onStateChanged,
                                   this::onError));
+
         subscriptions.add(viewModel.getLoadingState()
                               .subscribeOn(Schedulers.io())
                               .observeOn(AndroidSchedulers.mainThread())
                               .subscribe(
                                   this::loading,
                                   this::onError));
+
+        subscriptions.add(viewModel.getDogs()
+                              .subscribeOn(Schedulers.io())
+                              .observeOn(AndroidSchedulers.mainThread())
+                              .subscribe(
+                                  this::addDogs,
+                                  this::onError));
+
         subscriptions.add(viewModel.getTitle()
                               .subscribeOn(Schedulers.io())
                               .observeOn(AndroidSchedulers.mainThread())
                               .subscribe(
                                   this::setTitle,
                                   this::onError));
+
         subscriptions.add(viewModel.getSnackbar()
+                              .subscribeOn(Schedulers.io())
+                              .observeOn(AndroidSchedulers.mainThread())
                               .subscribe(
                                   this::showSnackbar,
                                   throwable -> Log.e(TAG, "Something went wrong, please try again later.", throwable)));
-        LinearLayoutManager layoutManager = viewModel.createLayoutManager();
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(viewModel.getAdapter());
+        recyclerView.setAdapter(adapter);
         itemDecoration = new VerticalSpaceItemDecoration((int) Util.dpToPx(getContext(), 1));
         recyclerView.addItemDecoration(itemDecoration);
         recyclerView.addOnScrollListener(scrollListener);
+    }
+
+    private void addDogs(List<Dog> dogs) {
+        adapter.addItems(dogs);
     }
 
     @Override
@@ -127,7 +151,6 @@ public class DogsFragment extends BaseFragment {
         recyclerView.setAdapter(null);
         recyclerView.setLayoutManager(null);
         subscriptions.clear();
-        viewModel.onDetach();
         super.onStop();
     }
 

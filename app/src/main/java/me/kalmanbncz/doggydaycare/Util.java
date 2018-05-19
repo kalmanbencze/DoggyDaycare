@@ -34,5 +34,4 @@ public class Util {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         return (int) Math.max(1, (dp * displayMetrics.density));
     }
-
 }

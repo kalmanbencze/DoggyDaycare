@@ -20,7 +20,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -105,21 +107,29 @@ public class EditFragment extends BaseFragment {
         Log.d(TAG, "onStart: ");
 
         subscriptions.add(viewModel.getDogBreedsHolder()
+                              .subscribeOn(Schedulers.io())
+                              .observeOn(AndroidSchedulers.mainThread())
                               .subscribe(
                                   this::setDogInfoAndBreeds,
                                   this::onError));
 
         subscriptions.add(viewModel.getTitle()
+                              .subscribeOn(Schedulers.io())
+                              .observeOn(AndroidSchedulers.mainThread())
                               .subscribe(
                                   this::setTitle,
                                   this::onError));
 
         subscriptions.add(viewModel.getLoading()
+                              .subscribeOn(Schedulers.io())
+                              .observeOn(AndroidSchedulers.mainThread())
                               .subscribe(
                                   this::onLoading,
                                   this::onError));
 
         subscriptions.add(viewModel.getSnackbar()
+                              .subscribeOn(Schedulers.io())
+                              .observeOn(AndroidSchedulers.mainThread())
                               .subscribe(
                                   this::showSnackbar,
                                   throwable -> Log.e(TAG, getString(R.string.error_message), throwable)));

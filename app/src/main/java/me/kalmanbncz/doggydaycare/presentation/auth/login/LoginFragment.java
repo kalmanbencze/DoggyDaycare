@@ -17,7 +17,9 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import javax.inject.Inject;
 import me.kalmanbncz.doggydaycare.R;
 import me.kalmanbncz.doggydaycare.data.LoginState;
@@ -59,10 +61,27 @@ public class LoginFragment extends BaseFragment {
     public void onStart() {
         super.onStart();
         subscriptions.clear();
-        viewModel.onAttach();
-        subscriptions.add(viewModel.getLoginState().subscribe(this::onStateChanged, this::onError));
-        subscriptions.add(viewModel.getTitle().subscribe(this::setTitle, this::onError));
-        subscriptions.add(viewModel.getSnackbar().subscribe(this::showSnackbar, this::onError));
+        subscriptions.add(viewModel.getLoginState()
+                              .subscribeOn(Schedulers.io())
+                              .observeOn(AndroidSchedulers.mainThread())
+                              .subscribe(
+                                  this::onStateChanged,
+                                  this::onError));
+
+        subscriptions.add(viewModel.getTitle()
+                              .subscribeOn(Schedulers.io())
+                              .observeOn(AndroidSchedulers.mainThread())
+                              .subscribe(
+                                  this::setTitle,
+                                  this::onError));
+
+        subscriptions.add(viewModel.getSnackbar()
+                              .subscribeOn(Schedulers.io())
+                              .observeOn(AndroidSchedulers.mainThread())
+                              .subscribe(
+                                  this::showSnackbar,
+                                  this::onError));
+
         usernameEditText.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -106,17 +125,25 @@ public class LoginFragment extends BaseFragment {
             passwordEditText.setText("123456");
         }
         loginButton.setOnClickListener(v -> {
-            viewModel.logIn(usernameEditText.getText().toString(), passwordEditText.getText().toString());
+            subscriptions.add(viewModel.logIn(usernameEditText.getText().toString(), passwordEditText.getText().toString())
+                                  .subscribeOn(Schedulers.io())
+                                  .observeOn(AndroidSchedulers.mainThread())
+                                  .subscribe(
+                                      this::onCompleted,
+                                      this::onError));
             v.setEnabled(false);
             usernameEditText.setEnabled(false);
             passwordEditText.setEnabled(false);
         });
     }
 
+    private void onCompleted() {
+        Log.d(TAG, "onCompleted: ");
+    }
+
     @Override
     public void onStop() {
         subscriptions.clear();
-        viewModel.onDetach();
         super.onStop();
     }
 

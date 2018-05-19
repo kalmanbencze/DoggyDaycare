@@ -33,7 +33,6 @@ public class SplashFragment extends BaseFragment {
     public void onStart() {
         super.onStart();
         subscriptions.clear();
-        viewModel.onAttach();
         subscriptions.add(viewModel.loggedIn()
                               .subscribeOn(Schedulers.io())
                               .observeOn(AndroidSchedulers.mainThread())
@@ -43,7 +42,6 @@ public class SplashFragment extends BaseFragment {
     @Override
     public void onStop() {
         subscriptions.clear();
-        viewModel.onDetach();
         super.onStop();
     }
 

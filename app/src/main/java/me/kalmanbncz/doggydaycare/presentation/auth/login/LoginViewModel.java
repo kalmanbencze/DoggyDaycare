@@ -1,8 +1,8 @@
 package me.kalmanbncz.doggydaycare.presentation.auth.login;
 
 import android.util.Log;
+import io.reactivex.Completable;
 import io.reactivex.Observable;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
 import javax.inject.Inject;
@@ -11,13 +11,12 @@ import me.kalmanbncz.doggydaycare.data.LoginState;
 import me.kalmanbncz.doggydaycare.di.scopes.screen.LoginScreenScope;
 import me.kalmanbncz.doggydaycare.domain.ResourcesProvider;
 import me.kalmanbncz.doggydaycare.domain.user.UserRepository;
-import me.kalmanbncz.doggydaycare.presentation.BaseViewModel;
 
 /**
  * Created by kalman.bencze on 18/05/2018.
  */
 @LoginScreenScope
-public class LoginViewModel implements BaseViewModel {
+public class LoginViewModel {
 
     private static final String TAG = LoginViewModel.class.getSimpleName();
 
@@ -26,8 +25,6 @@ public class LoginViewModel implements BaseViewModel {
     //    private static final String PASSWORD_REGEX = "/^.{4,}$/";
 
     private final UserRepository userRepository;
-
-    private final CompositeDisposable subscriptions = new CompositeDisposable();
 
     private final BehaviorSubject<String> title = BehaviorSubject.create();
 
@@ -44,15 +41,6 @@ public class LoginViewModel implements BaseViewModel {
         this.userRepository = userRepository;
         this.resourcesProvider = resourcesProvider;
         title.onNext(resourcesProvider.getLoginScreenTitle());
-    }
-
-    @Override
-    public void onAttach() {
-    }
-
-    @Override
-    public void onDetach() {
-        subscriptions.clear();
     }
 
     public Observable<LoginState> getLoginState() {
@@ -73,10 +61,17 @@ public class LoginViewModel implements BaseViewModel {
         return userMatches && passwordMatches;
     }
 
-    public void logIn(String user, String password) {
-        subscriptions.add(userRepository.login(user, password).subscribe(loginResult -> {
-            loggedIn(user, loginResult);
-        }));
+    public Completable logIn(String user, String password) {
+        return userRepository.login(user, password)
+            .flatMapCompletable(loginResult -> {
+                if (loginResult.isSuccess()) {
+                    return Completable.complete();
+                } else {
+                    return Completable.error(loginResult.getError());
+                }
+            })
+            .doOnComplete(() -> snackbar.onNext(resourcesProvider.getWelcomeMessage(user)))
+            .doOnError(throwable -> snackbar.onNext(resourcesProvider.getLoginErrorMessage()));
     }
 
     private void loggedIn(String user, LoginResult loginResult) {
