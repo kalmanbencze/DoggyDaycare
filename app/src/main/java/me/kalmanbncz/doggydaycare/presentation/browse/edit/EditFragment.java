@@ -3,6 +3,7 @@ package me.kalmanbncz.doggydaycare.presentation.browse.edit;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatCheckBox;
@@ -72,16 +73,16 @@ public class EditFragment extends BaseFragment {
     AppCompatSpinner genderSpinner;
 
     @BindView(R.id.commands_edittext)
-    EditText commandsEditText;
+    TextInputEditText commandsEditText;
 
     @BindView(R.id.eating_edittext)
-    EditText eatingEditText;
+    TextInputEditText eatingEditText;
 
     @BindView(R.id.walking_edittext)
-    EditText walkingEditText;
+    TextInputEditText walkingEditText;
 
     @BindView(R.id.sleeping_edittext)
-    EditText sleepingEditText;
+    TextInputEditText sleepingEditText;
 
     @Inject
     BrowseNavigator navigator;

@@ -80,7 +80,7 @@
 
                     <android.support.v7.widget.AppCompatSpinner
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
+                        android:layout_height="@dimen/edit_list_item_height"
                         android:id="@+id/breed_spinner"
                         style="@style/Base.Widget.AppCompat.Spinner.Underlined"
                         app:layout_constraintTop_toTopOf="parent"
@@ -88,7 +88,7 @@
 
                     <android.support.v7.widget.AppCompatSpinner
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
+                        android:layout_height="@dimen/edit_list_item_height"
                         app:layout_constraintTop_toBottomOf="@id/breed_spinner"
                         android:id="@+id/birthdate_spinner"
                         android:layout_marginTop="15dp"
@@ -97,7 +97,7 @@
 
                     <android.support.v7.widget.AppCompatSpinner
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
+                        android:layout_height="@dimen/edit_list_item_height"
                         app:layout_constraintTop_toBottomOf="@id/birthdate_spinner"
                         android:id="@+id/size_spinner"
                         android:layout_marginTop="15dp"
@@ -106,7 +106,7 @@
 
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_height="48dp"
+                        android:layout_height="@dimen/edit_list_item_height"
                         android:text="@string/vaccinations_label"
                         app:layout_constraintStart_toStartOf="parent"
                         android:gravity="center"
@@ -116,7 +116,7 @@
                     <android.support.v7.widget.AppCompatCheckBox
                         android:id="@+id/vaccinations_checkbox"
                         android:layout_width="wrap_content"
-                        android:layout_height="48dp"
+                        android:layout_height="@dimen/edit_list_item_height"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/size_spinner"
                         android:layout_marginTop="25dp"
@@ -124,7 +124,7 @@
                         />
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_height="48dp"
+                        android:layout_height="@dimen/edit_list_item_height"
                         android:text="@string/neutered_label"
                         app:layout_constraintStart_toStartOf="parent"
                         android:gravity="center"
@@ -135,13 +135,13 @@
                         android:layout_width="wrap_content"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/vaccinations_checkbox"
-                        android:layout_height="48dp"
+                        android:layout_height="@dimen/edit_list_item_height"
                         style="@style/Widget.AppCompat.CompoundButton.CheckBox"
                         />
 
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_height="48dp"
+                        android:layout_height="@dimen/edit_list_item_height"
                         android:text="@string/friendly_label"
                         app:layout_constraintStart_toStartOf="parent"
                         android:gravity="center"
@@ -152,55 +152,84 @@
                         app:layout_constraintTop_toBottomOf="@id/neutered_checkbox"
                         android:layout_width="wrap_content"
                         app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_height="48dp"
+                        android:layout_height="@dimen/edit_list_item_height"
                         style="@style/Widget.AppCompat.CompoundButton.CheckBox"
                         />
 
                     <android.support.v7.widget.AppCompatSpinner
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
+                        android:layout_height="@dimen/edit_list_item_height"
                         app:layout_constraintTop_toBottomOf="@id/friendly_checkbox"
                         android:id="@+id/gender_spinner"
                         android:layout_marginTop="25dp"
                         style="@style/Base.Widget.AppCompat.Spinner.Underlined"
                         />
-
-                    <EditText
-                        android:id="@+id/commands_edittext"
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/commands_textinput"
+                        android:layout_width="match_parent"
                         app:layout_constraintTop_toBottomOf="@id/gender_spinner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/commands_hint_label"
                         android:layout_marginTop="25dp"
-                        style="@style/EditTextStyle"
-                        />
-                    <EditText
-                        android:id="@+id/eating_edittext"
-                        app:layout_constraintTop_toBottomOf="@id/commands_edittext"
-                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:hint="@string/eating_schedule_hint_label"
-                        style="@style/EditTextStyle"
-                        />
-                    <EditText
-                        android:id="@+id/walking_edittext"
-                        app:layout_constraintTop_toBottomOf="@id/eating_edittext"
+                        >
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/commands_edittext"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/edit_list_item_height"
+                            android:hint="@string/commands_hint_label"
+                            style="@style/EditTextStyle"
+                            />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/eating_textinput"
                         android:layout_width="match_parent"
+                        app:layout_constraintTop_toBottomOf="@id/commands_textinput"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:hint="@string/walking_schedule_hint_label"
-                        style="@style/EditTextStyle"
-                        />
-                    <EditText
-                        android:id="@+id/sleeping_edittext"
-                        app:layout_constraintTop_toBottomOf="@id/walking_edittext"
+                        >
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/eating_edittext"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/edit_list_item_height"
+                            android:layout_marginTop="20dp"
+                            android:hint="@string/eating_schedule_hint_label"
+                            style="@style/EditTextStyle"
+                            />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/walking_textinput"
                         android:layout_width="match_parent"
+                        app:layout_constraintTop_toBottomOf="@id/eating_textinput"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:hint="@string/sleeping_schedule_hint_label"
-                        style="@style/EditTextStyle"
-                        />
+                        >
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/walking_edittext"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/edit_list_item_height"
+                            android:layout_marginTop="20dp"
+                            android:hint="@string/walking_schedule_hint_label"
+                            style="@style/EditTextStyle"
+                            />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/sleeping_textinput"
+                        android:layout_width="match_parent"
+                        app:layout_constraintTop_toBottomOf="@id/walking_textinput"
+                        android:layout_height="wrap_content"
+                        >
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/sleeping_edittext"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/edit_list_item_height"
+                            android:layout_marginTop="20dp"
+                            android:hint="@string/sleeping_schedule_hint_label"
+                            style="@style/EditTextStyle"
+                            />
+                    </android.support.design.widget.TextInputLayout>
                 </android.support.constraint.ConstraintLayout>
             </android.support.v7.widget.CardView>
         </android.support.constraint.ConstraintLayout>

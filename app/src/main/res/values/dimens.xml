@@ -2,4 +2,5 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="nameEditTextHeight">94dp</dimen>
     <dimen name="default_elevation">8dp</dimen>
+    <dimen name="edit_list_item_height">48dp</dimen>
 </resources>
