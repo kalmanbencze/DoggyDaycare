@@ -15,7 +15,7 @@ import toothpick.config.Module;
 /**
  * Created by kalman.bencze on 18/05/2018.
  */
-public class BackendApiModule extends Module {
+class BackendApiModule extends Module {
 
     public BackendApiModule(Retrofit retrofit) {
         //todo uncomment for production

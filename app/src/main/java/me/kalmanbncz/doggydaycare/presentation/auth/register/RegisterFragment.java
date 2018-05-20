@@ -33,20 +33,19 @@ public class RegisterFragment extends BaseFragment {
 
     private static final String TAG = RegisterFragment.class.getSimpleName();
 
+    private final CompositeDisposable subscriptions = new CompositeDisposable();
+
     @BindView(R.id.toolbar)
-    protected Toolbar toolbar;
+    Toolbar toolbar;
 
     @BindView(R.id.progress_bar)
-    protected ProgressBar progressBar;
+    ProgressBar progressBar;
 
     @BindView(R.id.text_input_edit_text_username)
-    protected TextInputEditText usernameEditText;
+    TextInputEditText usernameEditText;
 
     @BindView(R.id.text_input_edit_text_password)
-    protected TextInputEditText passwordEditText;
-
-    @BindView(R.id.button_login)
-    protected Button loginButton;
+    TextInputEditText passwordEditText;
 
     @Inject
     AuthNavigator navigator;
@@ -54,7 +53,8 @@ public class RegisterFragment extends BaseFragment {
     @Inject
     RegisterViewModel viewModel;
 
-    private CompositeDisposable subscriptions = new CompositeDisposable();
+    @BindView(R.id.button_login)
+    Button loginButton;
 
     private void onCompleted() {
         Log.d(TAG, "onCompleted: ");

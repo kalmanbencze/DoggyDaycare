@@ -8,7 +8,7 @@ import me.kalmanbncz.doggydaycare.presentation.Navigator;
  */
 @DebugLog
 @SplashFlowScope
-public interface SplashNavigator extends Navigator {
+interface SplashNavigator extends Navigator {
 
     void openAuth();
 

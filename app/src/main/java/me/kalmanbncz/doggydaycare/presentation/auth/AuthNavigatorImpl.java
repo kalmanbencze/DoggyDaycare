@@ -28,7 +28,7 @@ class AuthNavigatorImpl implements AuthNavigator {
 
     private final Context context;
 
-    private Stack<Scope> scopeStack = new Stack<>();
+    private final Stack<Scope> scopeStack = new Stack<>();
 
     private Executor executor;
 

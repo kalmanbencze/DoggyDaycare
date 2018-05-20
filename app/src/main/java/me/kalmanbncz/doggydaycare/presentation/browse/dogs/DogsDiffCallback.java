@@ -9,9 +9,9 @@ import me.kalmanbncz.doggydaycare.data.Dog;
  */
 class DogsDiffCallback extends DiffUtil.Callback {
 
-    private List<Dog> oldDogs;
+    private final List<Dog> oldDogs;
 
-    private List<Dog> newDogs;
+    private final List<Dog> newDogs;
 
     DogsDiffCallback(List<Dog> newDogs, List<Dog> oldDogs) {
         this.newDogs = newDogs;

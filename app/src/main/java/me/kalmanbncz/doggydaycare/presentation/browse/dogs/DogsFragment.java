@@ -43,20 +43,29 @@ public class DogsFragment extends BaseFragment {
 
     private static final String TAG = DogsFragment.class.getSimpleName();
 
+    private final RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            int visibleItemCount = recyclerView.getLayoutManager().getChildCount();
+            int totalItemCount = recyclerView.getLayoutManager().getItemCount();
+            int pastVisibleItems = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+            if (pastVisibleItems + visibleItemCount >= totalItemCount - 5) {
+                viewModel.loadMoreItems();
+            }
+        }
+    };
+
+    private final CompositeDisposable subscriptions = new CompositeDisposable();
+
     @BindView(R.id.toolbar)
-    protected Toolbar toolbar;
+    Toolbar toolbar;
 
     @BindView(R.id.drawer_layout)
-    protected DrawerLayout drawerLayout;
+    DrawerLayout drawerLayout;
 
     @BindView(R.id.navigation_view)
-    protected NavigationView navigationView;
-
-    @BindView(R.id.empty_layout)
-    protected ViewGroup emptyLayout;
-
-    @BindView(R.id.add_first_dog)
-    protected AppCompatButton addFirstDogButton;
+    NavigationView navigationView;
 
     @Inject
     BrowseNavigator browseNavigator;
@@ -70,20 +79,11 @@ public class DogsFragment extends BaseFragment {
     @Inject
     DogsViewModel viewModel;
 
-    RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
+    @BindView(R.id.empty_layout)
+    ViewGroup emptyLayout;
 
-        @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            int visibleItemCount = recyclerView.getLayoutManager().getChildCount();
-            int totalItemCount = recyclerView.getLayoutManager().getItemCount();
-            int pastVisibleItems = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
-            if (pastVisibleItems + visibleItemCount >= totalItemCount - 5) {
-                viewModel.loadMoreItems();
-            }
-        }
-    };
-
-    private CompositeDisposable subscriptions = new CompositeDisposable();
+    @BindView(R.id.add_first_dog)
+    AppCompatButton addFirstDogButton;
 
     private VerticalSpaceItemDecoration itemDecoration;
 

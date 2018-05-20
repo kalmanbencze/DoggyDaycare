@@ -26,7 +26,7 @@ public class SplashNavigatorImpl implements SplashNavigator {
 
     private final Context context;
 
-    private Stack<Scope> scopeStack = new Stack<>();
+    private final Stack<Scope> scopeStack = new Stack<>();
 
     private Navigator.Executor executor;
 

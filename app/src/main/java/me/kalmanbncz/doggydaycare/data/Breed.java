@@ -5,9 +5,9 @@ package me.kalmanbncz.doggydaycare.data;
  */
 public class Breed {
 
-    private int id;
+    private final int id;
 
-    private String name;
+    private final String name;
 
     public Breed(int id, String name) {
         this.id = id;

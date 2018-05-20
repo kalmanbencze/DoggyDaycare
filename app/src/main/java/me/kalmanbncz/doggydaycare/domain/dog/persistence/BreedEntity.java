@@ -12,17 +12,15 @@ public class BreedEntity {
 
     @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)
-    public
-    int id;
+    public final int id;
 
     @ColumnInfo(name = "name")
-    public
-    String name;
+    public final String name;
 
     @ColumnInfo(name = "timestamp")
     long timestamp;
 
-    public BreedEntity(int id, String name) {
+    BreedEntity(int id, String name) {
         this.id = id;
         this.name = name;
     }

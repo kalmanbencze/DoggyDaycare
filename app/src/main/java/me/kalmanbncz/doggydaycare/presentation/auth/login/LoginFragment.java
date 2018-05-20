@@ -33,23 +33,22 @@ public class LoginFragment extends BaseFragment {
 
     private static final String TAG = LoginFragment.class.getSimpleName();
 
+    private final CompositeDisposable subscriptions = new CompositeDisposable();
+
     @BindView(R.id.toolbar)
-    protected Toolbar toolbar;
+    Toolbar toolbar;
 
     @BindView(R.id.progress_bar)
-    protected ProgressBar progressBar;
+    ProgressBar progressBar;
 
     @BindView(R.id.text_input_edit_text_username)
-    protected TextInputEditText usernameEditText;
+    TextInputEditText usernameEditText;
 
     @BindView(R.id.text_input_edit_text_password)
-    protected TextInputEditText passwordEditText;
+    TextInputEditText passwordEditText;
 
     @BindView(R.id.button_login)
-    protected AppCompatButton loginButton;
-
-    @BindView(R.id.button_register)
-    protected AppCompatButton registerButton;
+    AppCompatButton loginButton;
 
     @Inject
     AuthNavigator navigator;
@@ -57,7 +56,8 @@ public class LoginFragment extends BaseFragment {
     @Inject
     LoginViewModel viewModel;
 
-    private CompositeDisposable subscriptions = new CompositeDisposable();
+    @BindView(R.id.button_register)
+    AppCompatButton registerButton;
 
     private void onCompleted() {
         Log.d(TAG, "onCompleted: ");

@@ -26,12 +26,12 @@ import me.kalmanbncz.doggydaycare.R;
  */
 public abstract class BaseFragment extends Fragment implements FragmentManager.OnBackStackChangedListener {
 
-    @BindView(R.id.toolbar)
-    protected Toolbar toolbar;
+    private final Handler uiHandler = new Handler(Looper.getMainLooper());
 
     private Snackbar snackbar;
 
-    private Handler uiHandler = new Handler(Looper.getMainLooper());
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,7 +69,7 @@ public abstract class BaseFragment extends Fragment implements FragmentManager.O
         super.onStop();
     }
 
-    public ActionBar getActionBar() {
+    private ActionBar getActionBar() {
         return getActivity() != null ? ((AppCompatActivity) getActivity()).getSupportActionBar() : null;
     }
 
@@ -90,11 +90,11 @@ public abstract class BaseFragment extends Fragment implements FragmentManager.O
         showSnackbar(resId, duration, null, null);
     }
 
-    public void showSnackbar(final CharSequence text, final int duration) {
+    private void showSnackbar(final CharSequence text, final int duration) {
         showSnackbar(text, duration, null, null);
     }
 
-    public void showSnackbar(final @StringRes int resId, final int duration, final String button, final Runnable onClick) {
+    private void showSnackbar(final @StringRes int resId, final int duration, final String button, final Runnable onClick) {
         showSnackbar(getText(resId), duration, button, onClick);
     }
 
@@ -102,7 +102,7 @@ public abstract class BaseFragment extends Fragment implements FragmentManager.O
         showSnackbar(getText(resId), duration, getText(buttonResId), onClick);
     }
 
-    public void showSnackbar(final CharSequence text, final int duration, final CharSequence button, final Runnable onClick) {
+    protected void showSnackbar(final CharSequence text, final int duration, final CharSequence button, final Runnable onClick) {
         uiHandler.post(() -> {
             View view = getView();
             if (snackbar != null && snackbar.isShown()) {
@@ -135,7 +135,6 @@ public abstract class BaseFragment extends Fragment implements FragmentManager.O
             navigationStackIsEmpty = getFragmentManager().getBackStackEntryCount() <= 1;
             if (getActionBar() != null) {
                 Drawable upArrow = AppCompatResources.getDrawable(getContext(), R.drawable.vector_close);
-                ;
                 getActionBar().setDisplayHomeAsUpEnabled(!navigationStackIsEmpty);
                 if (!navigationStackIsEmpty) {
                     getActionBar().setHomeAsUpIndicator(upArrow);

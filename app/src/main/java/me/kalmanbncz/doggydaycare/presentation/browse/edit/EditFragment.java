@@ -111,7 +111,7 @@ public class EditFragment extends BaseFragment {
     @BindView(R.id.progress_bar)
     ContentLoadingProgressBar progressBar;
 
-    private CompositeDisposable subscriptions = new CompositeDisposable();
+    private final CompositeDisposable subscriptions = new CompositeDisposable();
 
     private TextChangedListener nameTextWatcher;
 
@@ -225,7 +225,7 @@ public class EditFragment extends BaseFragment {
         sleepingEditText.setText(dog.getSleepSched());
     }
 
-    public void setAdapterForSpinner(AppCompatSpinner spinner, List<String> items, String selected, String hint) {
+    private void setAdapterForSpinner(AppCompatSpinner spinner, List<String> items, String selected, String hint) {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(spinner.getContext(), android.R.layout.simple_spinner_dropdown_item) {
 
             @Override
@@ -313,7 +313,7 @@ public class EditFragment extends BaseFragment {
         super.onStop();
     }
 
-    public void setListeners() {
+    private void setListeners() {
         nameTextWatcher = new TextChangedListener() {
 
             @Override

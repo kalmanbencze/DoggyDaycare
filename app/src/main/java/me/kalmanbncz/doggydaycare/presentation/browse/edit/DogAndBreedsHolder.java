@@ -9,9 +9,9 @@ import me.kalmanbncz.doggydaycare.data.Dog;
  */
 class DogAndBreedsHolder {
 
-    Dog dog;
+    private final Dog dog;
 
-    List<Breed> breeds;
+    private final List<Breed> breeds;
 
     DogAndBreedsHolder(Dog dog, List<Breed> breeds) {
         this.dog = dog;

@@ -1,6 +1,5 @@
 package me.kalmanbncz.doggydaycare.presentation.splash;
 
-import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,7 +26,7 @@ public class SplashFragment extends BaseFragment {
     @Inject
     SplashViewModel viewModel;
 
-    private CompositeDisposable subscriptions = new CompositeDisposable();
+    private final CompositeDisposable subscriptions = new CompositeDisposable();
 
     private void forward(Boolean aBoolean) {
         if (aBoolean != null && aBoolean) {
@@ -40,9 +39,7 @@ public class SplashFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_splash, container, false);
-
-        return view;
+        return inflater.inflate(R.layout.fragment_splash, container, false);
     }
 
     @Override
@@ -60,11 +57,5 @@ public class SplashFragment extends BaseFragment {
     public void onStop() {
         subscriptions.clear();
         super.onStop();
-    }
-
-    public void setupActionbar(ActionBar actionBar) {
-        if (actionBar != null) {
-            actionBar.setTitle(R.string.app_name);
-        }
     }
 }

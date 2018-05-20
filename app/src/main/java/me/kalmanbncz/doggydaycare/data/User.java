@@ -7,9 +7,9 @@ public class User {
 
     private final String username;
 
-    private int id;
+    private final int id;
 
-    private String token;
+    private final String token;
 
     public User(int id, String username, String token) {
         this.id = id;

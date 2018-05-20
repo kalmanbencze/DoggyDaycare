@@ -29,11 +29,11 @@ class LoginViewModelImpl implements LoginViewModel {
 
     private final ResourcesProvider resourcesProvider;
 
-    private PublishSubject<String> snackbar = PublishSubject.create();
+    private final PublishSubject<String> snackbar = PublishSubject.create();
 
-    private BehaviorSubject<String> usernameSubject = BehaviorSubject.create();
+    private final BehaviorSubject<String> usernameSubject = BehaviorSubject.create();
 
-    private BehaviorSubject<String> passwordSubject = BehaviorSubject.create();
+    private final BehaviorSubject<String> passwordSubject = BehaviorSubject.create();
 
     @Inject
     LoginViewModelImpl(ResourcesProvider resourcesProvider, UserRepository userRepository) {

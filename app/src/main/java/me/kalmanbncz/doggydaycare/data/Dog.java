@@ -1,7 +1,5 @@
 package me.kalmanbncz.doggydaycare.data;
 
-import android.arch.persistence.room.TypeConverter;
-
 /**
  * Created by kalman.bencze on 18/05/2018.
  */
@@ -214,48 +212,6 @@ public class Dog {
 
         Gender(String code) {
             this.code = code;
-        }
-    }
-
-    public static class DogSizeConverter {
-
-        @TypeConverter
-        public DogSize toSize(String size) {
-            if (size.equals(DogSize.SMALL.code)) {
-                return DogSize.SMALL;
-            } else if (size.equals(DogSize.MEDIUM.code)) {
-                return DogSize.MEDIUM;
-            } else if (size.equals(DogSize.LARGE.code)) {
-                return DogSize.LARGE;
-            } else if (size.equals(DogSize.GIANT.code)) {
-                return DogSize.GIANT;
-            } else {
-                throw new IllegalArgumentException("Could not recognize code");
-            }
-        }
-
-        @TypeConverter
-        public String toString(DogSize size) {
-            return size.code;
-        }
-    }
-
-    public static class GenderConverter {
-
-        @TypeConverter
-        public Gender toGender(String size) {
-            if (size.equals(Gender.MALE.code)) {
-                return Gender.MALE;
-            } else if (size.equals(Gender.FEMALE.code)) {
-                return Gender.FEMALE;
-            } else {
-                throw new IllegalArgumentException("Could not recognize gender");
-            }
-        }
-
-        @TypeConverter
-        public String toString(Gender gender) {
-            return gender.code;
         }
     }
 }

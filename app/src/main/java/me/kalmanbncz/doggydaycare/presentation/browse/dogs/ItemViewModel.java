@@ -3,7 +3,7 @@ package me.kalmanbncz.doggydaycare.presentation.browse.dogs;
 /**
  * Created by kalman.bencze on 18/05/2018.
  */
-public abstract class ItemViewModel<ITEM_T> {
+abstract class ItemViewModel<ITEM_T> {
 
     public abstract ITEM_T getItem();
 

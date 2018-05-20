@@ -26,7 +26,7 @@ class EditViewModelImpl implements EditViewModel {
 
     private final Observable<Dog> dogObservable;
 
-    private Dog dog;
+    private final Dog dog;
 
     @Inject
     EditViewModelImpl(ResourcesProvider resourcesProvider, DogRepository dogRepository, Dog dog) {

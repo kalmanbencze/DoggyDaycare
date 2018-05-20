@@ -39,7 +39,7 @@ public class DogRepositoryImpl implements DogRepository {
 
     private final DogDao dogDao;
 
-    private ReplayProcessor<Integer> paginator = ReplayProcessor.create();
+    private final ReplayProcessor<Integer> paginator = ReplayProcessor.create();
 
     private int pageIndex = 0;
 
@@ -60,7 +60,7 @@ public class DogRepositoryImpl implements DogRepository {
         Log.d(TAG, "getDogs: ");
         return dogDao.getDogs()
             .map(this::mapToDogs);
-        // TODO: 5/20/2018 enable this for joint results from server
+        // TODO: 5/20/2018 enable this for joint results from server and DB
         //return Flowable.concat(dogDao.getDogs()
         //                             .map(this::mapToDogs),
         //                         retrieveDogsInternal()
@@ -117,7 +117,9 @@ public class DogRepositoryImpl implements DogRepository {
      *
      * @return a {@link DogsPageList} with a list of dogs
      */
-    private Flowable<DogsPageList> retrieveDogsInternal() {
+    @SuppressWarnings("unused")
+    Flowable<DogsPageList> retrieveDogsInternal() {
+        //todo this is the paged flowable returning the dogs from the rest api if the above section is uncommented
         return paginator.subscribeOn(Schedulers.computation())
             .map(page -> {
                 //loading.onNext(true);
@@ -198,31 +200,5 @@ public class DogRepositoryImpl implements DogRepository {
             dogs.add(dog);
         }
         return dogs;
-    }
-
-    private class DogsRetrievalFailed extends Throwable {
-
-        private Throwable throwable;
-
-        DogsRetrievalFailed(Throwable throwable) {
-            this.throwable = throwable;
-        }
-
-        public Throwable getThrowable() {
-            return throwable;
-        }
-    }
-
-    private class DogEditError extends Throwable {
-
-        private Throwable throwable;
-
-        DogEditError(Throwable throwable) {
-            this.throwable = throwable;
-        }
-
-        public Throwable getThrowable() {
-            return throwable;
-        }
     }
 }

@@ -20,11 +20,11 @@ public class UserRepositoryImpl implements UserRepository {
 
     private static final String TAG = "UserRepositoryImpl";
 
-    private UserRetrofitApi userRetrofitApi;
+    private final UserRetrofitApi userRetrofitApi;
 
-    private UserCache userCache;
+    private final UserCache userCache;
 
-    private String apiKey;
+    private final String apiKey;
 
     @Inject
     UserRepositoryImpl(UserCache userCache, UserRetrofitApi userRetrofitApi, ResourcesProvider resourcesProvider) {
@@ -53,7 +53,8 @@ public class UserRepositoryImpl implements UserRepository {
                     .doOnError(throwable -> userCache.removeCurrentUser())
                     .doOnNext(loginResult -> {
                         if (loginResult.isSuccess()) {
-                            userCache.setCurrentUser(new User(0, username, requestTokenResponse.requestToken));//todo hardcoded id 0
+                            userCache.setCurrentUser(
+                                new User(0, username, requestTokenResponse.requestToken));//todo hardcoded id 0 for a mock user
                         } else {
                             userCache.removeCurrentUser();
                         }
@@ -87,7 +88,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     private class RequestTokenFailed extends Throwable {
 
-        private Throwable throwable;
+        private final Throwable throwable;
 
         RequestTokenFailed(Throwable throwable) {
             this.throwable = throwable;
@@ -100,7 +101,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     private class LoginFailed extends Throwable {
 
-        private Throwable throwable;
+        private final Throwable throwable;
 
         LoginFailed(Throwable code) {
             this.throwable = code;
