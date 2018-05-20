@@ -10,8 +10,6 @@ import javax.inject.Inject;
 import me.kalmanbncz.doggydaycare.data.User;
 import me.kalmanbncz.doggydaycare.di.scopes.ApplicationScope;
 
-import static me.kalmanbncz.doggydaycare.Util.trace;
-
 /**
  * Created by kalman.bencze on 18/05/2018.
  */
@@ -64,7 +62,6 @@ public class UserCacheImpl implements UserCache {
 
     private void emitUser() {
         Log.d(TAG, "emitUser: ");
-        trace();
         user.onNext(new User(
             preferences.getInt(KEY_USER_ID, -1),
             preferences.getString(KEY_USER_NAME, null),

@@ -5,6 +5,7 @@ import android.os.StrictMode;
 import com.squareup.leakcanary.LeakCanary;
 import me.kalmanbncz.doggydaycare.di.AppModule;
 import me.kalmanbncz.doggydaycare.di.BackendApiModule;
+import me.kalmanbncz.doggydaycare.di.DatabaseModule;
 import me.kalmanbncz.doggydaycare.di.SplashModule;
 import me.kalmanbncz.doggydaycare.di.scopes.ApplicationScope;
 import me.kalmanbncz.doggydaycare.di.scopes.flow.SplashFlowScope;
@@ -38,6 +39,7 @@ public class DoggyApplication extends Application {
         scope.bindScopeAnnotation(ApplicationScope.class);
         scope.installModules(new AppModule(this));
         scope.installModules(new BackendApiModule(scope.getInstance(Retrofit.class)));
+        scope.installModules(new DatabaseModule(this));
         Toothpick.inject(this, scope);
         Scope splash = Toothpick.openScopes(ApplicationScope.class, SplashFlowScope.class);
         splash.bindScopeAnnotation(SplashFlowScope.class);

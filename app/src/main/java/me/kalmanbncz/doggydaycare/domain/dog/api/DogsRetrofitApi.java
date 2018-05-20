@@ -1,8 +1,12 @@
 package me.kalmanbncz.doggydaycare.domain.dog.api;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.PUT;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -37,4 +41,15 @@ public interface DogsRetrofitApi {
      */
     @GET(BREED_URL)
     Observable<BreedsJSONResponse> getBreeds(@Query("api_key") String apiKey);
+
+    /**
+     * Add or update a dog
+     *
+     * @param apiKey the api key of the api
+     *
+     * @return a {@link Completable} object which will return the status of the operation
+     */
+    @PUT(DOG_URL + "/{id}")
+    Observable<InsertJsonResponse> addOrUpdateDog(@Path("id") String id, @Body DogJSONResult dogJSONResult,
+                                                  @Query("api_key") String apiKey);
 }

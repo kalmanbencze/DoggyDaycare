@@ -1,6 +1,5 @@
 package me.kalmanbncz.doggydaycare.presentation.browse.edit;
 
-import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.subjects.BehaviorSubject;
 import java.util.List;
@@ -10,6 +9,7 @@ import me.kalmanbncz.doggydaycare.data.Dog;
 import me.kalmanbncz.doggydaycare.di.scopes.screen.EditScreenScope;
 import me.kalmanbncz.doggydaycare.domain.ResourcesProvider;
 import me.kalmanbncz.doggydaycare.domain.dog.DogRepository;
+import me.kalmanbncz.doggydaycare.domain.dog.OperationStatus;
 
 /**
  * Created by kalman.bencze on 18/05/2018.
@@ -41,7 +41,7 @@ public class EditViewModel {
         return Observable.combineLatest(dogObservable, getBreeds(), DogAndBreedsHolder::new);
     }
 
-    public Completable save() {
+    public Observable<OperationStatus> save() {
         return dogRepository.addOrUpdate(dog);
     }
 

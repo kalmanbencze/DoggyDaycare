@@ -51,4 +51,11 @@ public class MockDogsRetrofitApi implements DogsRetrofitApi {
         }
         return Observable.just(response);
     }
+
+    @Override
+    public Observable<InsertJsonResponse> addOrUpdateDog(String id, DogJSONResult dogJSONResult, String apiKey) {
+        InsertJsonResponse res = new InsertJsonResponse();
+        res.code = 200;
+        return Observable.just(res);
+    }
 }

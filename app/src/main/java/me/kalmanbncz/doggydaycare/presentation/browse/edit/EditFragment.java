@@ -31,6 +31,7 @@ import javax.inject.Inject;
 import me.kalmanbncz.doggydaycare.R;
 import me.kalmanbncz.doggydaycare.data.Breed;
 import me.kalmanbncz.doggydaycare.data.Dog;
+import me.kalmanbncz.doggydaycare.domain.dog.OperationStatus;
 import me.kalmanbncz.doggydaycare.presentation.BaseFragment;
 import me.kalmanbncz.doggydaycare.presentation.browse.BrowseNavigator;
 import org.apache.commons.lang3.EnumUtils;
@@ -104,46 +105,6 @@ public class EditFragment extends BaseFragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart: ");
-
-        subscriptions.add(viewModel.getDogAndBreedsHolder()
-                              .subscribeOn(Schedulers.io())
-                              .observeOn(AndroidSchedulers.mainThread())
-                              .subscribe(
-                                  this::setDogInfoAndBreeds,
-                                  this::onError));
-
-        subscriptions.add(viewModel.getTitle()
-                              .subscribeOn(Schedulers.io())
-                              .observeOn(AndroidSchedulers.mainThread())
-                              .subscribe(
-                                  this::setTitle,
-                                  this::onError));
-
-        subscriptions.add(viewModel.getLoading()
-                              .subscribeOn(Schedulers.io())
-                              .observeOn(AndroidSchedulers.mainThread())
-                              .subscribe(
-                                  this::onLoading,
-                                  this::onError));
-
-        subscriptions.add(viewModel.getSnackbar()
-                              .subscribeOn(Schedulers.io())
-                              .observeOn(AndroidSchedulers.mainThread())
-                              .subscribe(
-                                  this::showSnackbar,
-                                  throwable -> Log.e(TAG, getString(R.string.error_message), throwable)));
-    }
-
-    @Override
-    public void onStop() {
-        subscriptions.clear();
-        super.onStop();
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.menu_edit, menu);
@@ -154,7 +115,10 @@ public class EditFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_done:
-                subscriptions.add(viewModel.save().subscribe(this::onSaved, this::onError));
+                subscriptions.add(viewModel.save()
+                                      .subscribeOn(Schedulers.io())
+                                      .observeOn(AndroidSchedulers.mainThread())
+                                      .subscribe(this::onSaved, this::onError));
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -254,7 +218,51 @@ public class EditFragment extends BaseFragment {
         return inflater.inflate(R.layout.fragment_edit, container, false);
     }
 
-    private void onSaved() {
-        navigator.back();
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart: ");
+
+        subscriptions.add(viewModel.getDogAndBreedsHolder()
+                              .subscribeOn(Schedulers.io())
+                              .observeOn(AndroidSchedulers.mainThread())
+                              .subscribe(
+                                  this::setDogInfoAndBreeds,
+                                  this::onError));
+
+        subscriptions.add(viewModel.getTitle()
+                              .subscribeOn(Schedulers.io())
+                              .observeOn(AndroidSchedulers.mainThread())
+                              .subscribe(
+                                  this::setTitle,
+                                  this::onError));
+
+        subscriptions.add(viewModel.getLoading()
+                              .subscribeOn(Schedulers.io())
+                              .observeOn(AndroidSchedulers.mainThread())
+                              .subscribe(
+                                  this::onLoading,
+                                  this::onError));
+
+        subscriptions.add(viewModel.getSnackbar()
+                              .subscribeOn(Schedulers.io())
+                              .observeOn(AndroidSchedulers.mainThread())
+                              .subscribe(
+                                  this::showSnackbar,
+                                  throwable -> Log.e(TAG, getString(R.string.error_message), throwable)));
+    }
+
+    @Override
+    public void onStop() {
+        subscriptions.clear();
+        super.onStop();
+    }
+
+    private void onSaved(OperationStatus status) {
+        if (status.isSuccess()) {
+            navigator.back();
+        } else {
+            showSnackbar(getString(R.string.error_message));
+        }
     }
 }

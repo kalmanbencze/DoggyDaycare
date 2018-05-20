@@ -3,7 +3,6 @@ package me.kalmanbncz.doggydaycare.di;
 import me.kalmanbncz.doggydaycare.domain.dog.DogRepository;
 import me.kalmanbncz.doggydaycare.domain.dog.DogRepositoryImpl;
 import me.kalmanbncz.doggydaycare.domain.dog.api.DogsRetrofitApi;
-import me.kalmanbncz.doggydaycare.domain.dog.api.MockDogsRetrofitApi;
 import me.kalmanbncz.doggydaycare.domain.user.UserRepository;
 import me.kalmanbncz.doggydaycare.domain.user.UserRepositoryImpl;
 import me.kalmanbncz.doggydaycare.domain.user.api.MockUserRetrofitApi;
@@ -20,8 +19,8 @@ public class BackendApiModule extends Module {
 
     public BackendApiModule(Retrofit retrofit) {
         //todo uncomment for production
-        //bind(DogsRetrofitApi.class).toInstance(retrofit.create(DogsRetrofitApi.class));
-        bind(DogsRetrofitApi.class).toInstance(new MockDogsRetrofitApi());
+        bind(DogsRetrofitApi.class).toInstance(retrofit.create(DogsRetrofitApi.class));
+        //bind(DogsRetrofitApi.class).toInstance(new MockDogsRetrofitApi());
         //todo uncomment for production
         //bind(UserRetrofitApi.class).toInstance(retrofit.create(UserRetrofitApi.class));
         bind(UserRetrofitApi.class).toInstance(new MockUserRetrofitApi());

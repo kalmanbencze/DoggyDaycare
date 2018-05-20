@@ -66,7 +66,7 @@ dependencies {
     annotationProcessor "com.jakewharton:butterknife-compiler:${ext.butterknifeVersion}"
     annotationProcessor "android.arch.persistence.room:compiler:${ext.roomVersion}"
 
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:${ext.leakCanaryVersion}"
+    debugImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${ext.leakCanaryVersion}"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${ext.leakCanaryVersion}"
 
     testImplementation "com.github.stephanenicolas.toothpick:toothpick-testing:${ext.toothpickVersion}"

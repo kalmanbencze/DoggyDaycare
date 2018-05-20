@@ -1,10 +1,9 @@
 package me.kalmanbncz.doggydaycare.domain.dog;
 
 import android.util.Log;
-import io.reactivex.Completable;
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.BehaviorSubject;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -18,6 +17,10 @@ import me.kalmanbncz.doggydaycare.domain.dog.api.BreedsJSONResponse;
 import me.kalmanbncz.doggydaycare.domain.dog.api.DogJSONResult;
 import me.kalmanbncz.doggydaycare.domain.dog.api.DogsJSONResponse;
 import me.kalmanbncz.doggydaycare.domain.dog.api.DogsRetrofitApi;
+import me.kalmanbncz.doggydaycare.domain.dog.persistence.BreedEntity;
+import me.kalmanbncz.doggydaycare.domain.dog.persistence.DogDao;
+import me.kalmanbncz.doggydaycare.domain.dog.persistence.DogDatabase;
+import me.kalmanbncz.doggydaycare.domain.dog.persistence.DogEntity;
 
 /**
  * Created by kalman.bencze on 18/05/2018.
@@ -31,15 +34,68 @@ public class DogRepositoryImpl implements DogRepository {
 
     private final String apiKey;
 
+    private final DogDao dogDao;
+
     @Inject
-    DogRepositoryImpl(DogsRetrofitApi dogsRetrofitApi, ResourcesProvider resourcesProvider) {
+    DogRepositoryImpl(DogsRetrofitApi dogsRetrofitApi, DogDatabase dogDao, ResourcesProvider resourcesProvider) {
         Log.d(TAG, "DogRepositoryImpl: created");
         this.dogsRetrofitApi = dogsRetrofitApi;
+        this.dogDao = dogDao.dogDao();
         apiKey = resourcesProvider.getApiKey();
     }
 
     /**
      * Discover dogs at a certain page.
+     *
+     * @return a {@link DogsPageList} with a list of dogs
+     */
+    public Observable<List<Dog>> getDogs(int page) {
+        Log.d(TAG, "getDogs: ");
+        return Observable.concat(dogDao.getDogs()
+                                     .toObservable()
+                                     .map(this::mapToDogs),
+                                 retrieveDogsInternal(page)
+                                     .map(this::mapToDogs))
+            ;
+    }
+
+    /**
+     * Make an API call for the available breeds.
+     */
+    @Override
+    public Observable<List<Breed>> getBreeds() {
+        Log.d(TAG, "getBreeds: ");
+        return Observable.concat(dogDao.getBreeds()
+                                     .toObservable()
+                                     .map(this::mapTBreeds),
+                                 dogsRetrofitApi.getBreeds(apiKey)
+                                     .subscribeOn(Schedulers.io())
+                                     .map(this::mapTBreeds));
+    }
+
+    @Override
+    public Observable<OperationStatus> addOrUpdate(Dog dog) {
+        BehaviorSubject<OperationStatus> res = BehaviorSubject.createDefault(new OperationStatus(OperationStatus.STARTED));
+        return res.map(status -> {
+            long nr = dogDao.addOrUpdateDog(DogConverter.toEntity(dog));
+            if (nr > 0) {
+                return new OperationStatus(OperationStatus.LOCAL_SUCCESS);
+            } else {
+                return new OperationStatus(OperationStatus.FAILED);
+            }
+        }).flatMap((status) -> {
+            if (status.isSuccess()) {
+                return dogsRetrofitApi.addOrUpdateDog(String.valueOf(dog.getId()), DogConverter.toJsonObject(dog), apiKey)
+                    .map(insertJsonResponse ->
+                             new OperationStatus(insertJsonResponse.code == 200 ? OperationStatus.ONLINE_SUCCESS : OperationStatus.FAILED));
+            } else {
+                return Observable.just(new OperationStatus(OperationStatus.FAILED));
+            }
+        });
+    }
+
+    /**
+     * Get dogs at a certain page.
      *
      * @return a {@link DogsPageList} with a list of dogs
      */
@@ -50,50 +106,21 @@ public class DogRepositoryImpl implements DogRepository {
             .onErrorReturn(throwable -> new DogsPageList(new DogsRetrievalFailed(throwable)));
     }
 
-    /**
-     * Discover dogs at a certain page.
-     *
-     * @return a {@link DogsPageList} with a list of dogs
-     */
-    public Observable<List<Dog>> getDogs(int page) {
-        Log.d(TAG, "getBreeds: ");
-        return retrieveDogsInternal(page).flatMap(this::convertDogPageResponseToDogsList);
+    private List<Dog> mapToDogs(DogsPageList dogsPageList) {
+        return dogsPageList.getDogs();
     }
 
-    /**
-     * Make an API call for the available breeds.
-     */
-    @Override
-    public Observable<List<Breed>> getBreeds() {
-        return dogsRetrofitApi.getBreeds(apiKey)
-            .subscribeOn(Schedulers.io())
-            .map(this::mapTBreed)
-            .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    @Override
-    public Completable addOrUpdate(Dog dog) {
-        //dogsRetrofitApi.putDog(dog);
-        return Completable.complete();
-    }
-
-    private Observable<List<Dog>> convertDogPageResponseToDogsList(DogsPageList dogsPageList) {
-        Log.d(TAG, "convertDogPageResponseToDogsList: ");
-        Observable<List<Dog>> res = Observable.just(dogsPageList.getDogs());
-        Log.d(TAG, "convertDogPageResponseToDogsList: after just()");
-        return res;
-    }
-
-    private List<Breed> mapTBreed(BreedsJSONResponse breedsJSONResponse) {
-        Log.d(TAG, "mapTBreed: ");
-        final List<Breed> genres = new ArrayList<>();
+    private List<Breed> mapTBreeds(BreedsJSONResponse breedsJSONResponse) {
+        Log.d(TAG, "mapTBreeds: from server");
+        final List<Breed> breeds = new ArrayList<>();
         for (BreedJSONResponse breedJSONResult : breedsJSONResponse.results) {
-            genres.add(new Breed(breedJSONResult.id, breedJSONResult.name));
+            breeds.add(new Breed(breedJSONResult.id, breedJSONResult.name));
         }
-        return genres;
+        return breeds;
     }
 
     private DogsPageList mapToDogs(DogsJSONResponse dogsJSONResponse) {
+        Log.d(TAG, "mapToDogs: from server");
         final List<Dog> dogs = new ArrayList<>();
         for (DogJSONResult dogJSONResult : dogsJSONResponse.results) {
             final Dog dog = new Dog(dogJSONResult.id,
@@ -115,6 +142,37 @@ public class DogRepositoryImpl implements DogRepository {
                                 dogsJSONResponse.totalPages,
                                 dogsJSONResponse.totalResults,
                                 dogs);
+    }
+
+    private List<Breed> mapTBreeds(List<BreedEntity> breedEntities) {
+        Log.d(TAG, "mapTBreeds: from DB");
+        final List<Breed> breeds = new ArrayList<>();
+        for (BreedEntity breedEntity : breedEntities) {
+            breeds.add(new Breed(breedEntity.id, breedEntity.name));
+        }
+        return breeds;
+    }
+
+    private List<Dog> mapToDogs(List<DogEntity> dogEntities) {
+        Log.d(TAG, "mapToDogs: from DB");
+        final List<Dog> dogs = new ArrayList<>();
+        for (DogEntity dogEntity : dogEntities) {
+            final Dog dog = new Dog(dogEntity.id,
+                                    dogEntity.name,
+                                    dogEntity.breed,
+                                    dogEntity.gender,
+                                    dogEntity.size,
+                                    dogEntity.yearOfBirth,
+                                    dogEntity.vaccinated,
+                                    dogEntity.neutered,
+                                    dogEntity.friendly,
+                                    dogEntity.commands,
+                                    dogEntity.eatingSched,
+                                    dogEntity.sleepSched,
+                                    dogEntity.walkSched);
+            dogs.add(dog);
+        }
+        return dogs;
     }
 
     private class DogsRetrievalFailed extends Throwable {
