@@ -87,11 +87,6 @@ public class LoginFragment extends BaseFragment {
         }
     }
 
-    @Override
-    public String getScreenTag() {
-        return TAG;
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

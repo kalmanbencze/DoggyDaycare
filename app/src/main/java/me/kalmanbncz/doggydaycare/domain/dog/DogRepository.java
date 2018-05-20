@@ -5,7 +5,7 @@ import io.reactivex.Observable;
 import java.util.List;
 import me.kalmanbncz.doggydaycare.data.Breed;
 import me.kalmanbncz.doggydaycare.data.Dog;
-import me.kalmanbncz.doggydaycare.di.scopes.flow.BrowseFlowScope;
+import me.kalmanbncz.doggydaycare.presentation.browse.BrowseFlowScope;
 
 /**
  * Created by kalman.bencze on 18/05/2018.

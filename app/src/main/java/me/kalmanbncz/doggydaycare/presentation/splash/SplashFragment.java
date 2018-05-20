@@ -29,6 +29,22 @@ public class SplashFragment extends BaseFragment {
 
     private CompositeDisposable subscriptions = new CompositeDisposable();
 
+    private void forward(Boolean aBoolean) {
+        if (aBoolean != null && aBoolean) {
+            navigator.openBrowse();
+        } else {
+            navigator.openAuth();
+        }
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_splash, container, false);
+
+        return view;
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -43,27 +59,6 @@ public class SplashFragment extends BaseFragment {
     public void onStop() {
         subscriptions.clear();
         super.onStop();
-    }
-
-    private void forward(Boolean aBoolean) {
-        if (aBoolean != null && aBoolean) {
-            navigator.openBrowse();
-        } else {
-            navigator.openAuth();
-        }
-    }
-
-    @Override
-    public String getScreenTag() {
-        return TAG;
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_splash, container, false);
-
-        return view;
     }
 
     public void setupActionbar(ActionBar actionBar) {

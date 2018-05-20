@@ -22,14 +22,10 @@ import android.content.Context;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
-import me.kalmanbncz.doggydaycare.di.AppModule;
-import me.kalmanbncz.doggydaycare.di.AuthModule;
-import me.kalmanbncz.doggydaycare.di.BackendApiModule;
-import me.kalmanbncz.doggydaycare.di.DatabaseModule;
-import me.kalmanbncz.doggydaycare.di.scopes.ApplicationScope;
-import me.kalmanbncz.doggydaycare.di.scopes.flow.AuthFlowScope;
 import me.kalmanbncz.doggydaycare.domain.user.UserRepository;
 import me.kalmanbncz.doggydaycare.presentation.auth.AuthActivity;
+import me.kalmanbncz.doggydaycare.presentation.auth.AuthFlowScope;
+import me.kalmanbncz.doggydaycare.presentation.auth.AuthModule;
 import me.kalmanbncz.doggydaycare.presentation.browse.BrowseActivity;
 import org.junit.Rule;
 import org.junit.Test;
@@ -68,15 +64,15 @@ public class AuthActivityTest {
             super.beforeActivityLaunched();
             Context appContext = getTargetContext().getApplicationContext();
             Application app = (Application) appContext.getApplicationContext();
-            Scope scope = Toothpick.openScopes(ApplicationScope.class);
-            scope.bindScopeAnnotation(ApplicationScope.class);
+            Scope scope = Toothpick.openScopes(AppScope.class);
+            scope.bindScopeAnnotation(AppScope.class);
             scope.installModules(new AppModule(app));
             scope.installModules(new BackendApiModule(scope.getInstance(Retrofit.class)));
             scope.getInstance(UserRepository.class).clearCurrentUser();
             scope.installModules(new DatabaseModule(app));
             Toothpick.inject(this, scope);
 
-            Scope splash = Toothpick.openScopes(ApplicationScope.class, AuthFlowScope.class);
+            Scope splash = Toothpick.openScopes(AppScope.class, AuthFlowScope.class);
             splash.bindScopeAnnotation(AuthFlowScope.class);
             splash.installModules(new AuthModule());
         }
@@ -85,7 +81,7 @@ public class AuthActivityTest {
         protected void afterActivityFinished() {
             super.afterActivityFinished();
             Toothpick.closeScope(AuthFlowScope.class);
-            Toothpick.closeScope(ApplicationScope.class);
+            Toothpick.closeScope(AppScope.class);
         }
     };
 

@@ -1,7 +1,5 @@
-package me.kalmanbncz.doggydaycare.di;
+package me.kalmanbncz.doggydaycare.presentation.browse;
 
-import me.kalmanbncz.doggydaycare.presentation.browse.BrowseNavigator;
-import me.kalmanbncz.doggydaycare.presentation.browse.BrowseNavigatorImpl;
 import toothpick.config.Module;
 
 /**
@@ -10,6 +8,8 @@ import toothpick.config.Module;
 public class BrowseModule extends Module {
 
     public BrowseModule() {
+        bind(BrowseNavigator.class).to(BrowseNavigatorImpl.class).singletonInScope();
+        bind(BrowseNavigator.class).to(BrowseNavigatorImpl.class).singletonInScope();
         bind(BrowseNavigator.class).to(BrowseNavigatorImpl.class).singletonInScope();
     }
 }

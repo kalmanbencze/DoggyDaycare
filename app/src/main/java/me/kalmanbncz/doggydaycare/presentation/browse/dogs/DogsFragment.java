@@ -89,11 +89,6 @@ public class DogsFragment extends BaseFragment {
 
     private DogsAdapter adapter;
 
-    @Override
-    public String getScreenTag() {
-        return TAG;
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

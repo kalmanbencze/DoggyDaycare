@@ -1,4 +1,4 @@
-package me.kalmanbncz.doggydaycare.di.scopes;
+package me.kalmanbncz.doggydaycare.presentation.splash;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -11,6 +11,6 @@ import javax.inject.Scope;
 @Scope
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface UserScope {
+public @interface SplashFlowScope {
 
 }

@@ -7,13 +7,13 @@ import android.util.Log;
 import io.reactivex.Observable;
 import io.reactivex.subjects.BehaviorSubject;
 import javax.inject.Inject;
+import me.kalmanbncz.doggydaycare.AppScope;
 import me.kalmanbncz.doggydaycare.data.User;
-import me.kalmanbncz.doggydaycare.di.scopes.ApplicationScope;
 
 /**
  * Created by kalman.bencze on 18/05/2018.
  */
-@ApplicationScope
+@AppScope
 public class UserCacheImpl implements UserCache {
 
     private static final String KEY_USER_NAME = "userName";

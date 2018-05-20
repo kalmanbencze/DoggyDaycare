@@ -1,7 +1,5 @@
-package me.kalmanbncz.doggydaycare.di;
+package me.kalmanbncz.doggydaycare.presentation.auth;
 
-import me.kalmanbncz.doggydaycare.presentation.auth.AuthNavigator;
-import me.kalmanbncz.doggydaycare.presentation.auth.AuthNavigatorImpl;
 import toothpick.config.Module;
 
 /**

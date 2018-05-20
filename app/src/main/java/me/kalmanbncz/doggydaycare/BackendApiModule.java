@@ -1,4 +1,4 @@
-package me.kalmanbncz.doggydaycare.di;
+package me.kalmanbncz.doggydaycare;
 
 import me.kalmanbncz.doggydaycare.domain.dog.DogRepository;
 import me.kalmanbncz.doggydaycare.domain.dog.DogRepositoryImpl;

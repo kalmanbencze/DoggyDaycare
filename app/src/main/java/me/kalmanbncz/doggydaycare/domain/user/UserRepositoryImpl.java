@@ -4,9 +4,9 @@ import android.util.Log;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 import javax.inject.Inject;
+import me.kalmanbncz.doggydaycare.AppScope;
 import me.kalmanbncz.doggydaycare.data.LoginResult;
 import me.kalmanbncz.doggydaycare.data.User;
-import me.kalmanbncz.doggydaycare.di.scopes.ApplicationScope;
 import me.kalmanbncz.doggydaycare.domain.ResourcesProvider;
 import me.kalmanbncz.doggydaycare.domain.user.api.LoginResponse;
 import me.kalmanbncz.doggydaycare.domain.user.api.UserRetrofitApi;
@@ -15,7 +15,7 @@ import me.kalmanbncz.doggydaycare.domain.user.persistance.UserCache;
 /**
  * Created by kalman.bencze on 18/05/2018.
  */
-@ApplicationScope
+@AppScope
 public class UserRepositoryImpl implements UserRepository {
 
     private static final String TAG = "UserRepositoryImpl";

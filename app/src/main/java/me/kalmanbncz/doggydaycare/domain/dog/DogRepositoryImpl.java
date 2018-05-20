@@ -13,7 +13,6 @@ import javax.inject.Inject;
 import me.kalmanbncz.doggydaycare.data.Breed;
 import me.kalmanbncz.doggydaycare.data.Dog;
 import me.kalmanbncz.doggydaycare.data.DogsPageList;
-import me.kalmanbncz.doggydaycare.di.scopes.flow.BrowseFlowScope;
 import me.kalmanbncz.doggydaycare.domain.ResourcesProvider;
 import me.kalmanbncz.doggydaycare.domain.dog.api.BreedJSONResponse;
 import me.kalmanbncz.doggydaycare.domain.dog.api.BreedsJSONResponse;
@@ -24,6 +23,7 @@ import me.kalmanbncz.doggydaycare.domain.dog.persistence.BreedEntity;
 import me.kalmanbncz.doggydaycare.domain.dog.persistence.DogDao;
 import me.kalmanbncz.doggydaycare.domain.dog.persistence.DogDatabase;
 import me.kalmanbncz.doggydaycare.domain.dog.persistence.DogEntity;
+import me.kalmanbncz.doggydaycare.presentation.browse.BrowseFlowScope;
 
 /**
  * Created by kalman.bencze on 18/05/2018.

@@ -1,4 +1,4 @@
-package me.kalmanbncz.doggydaycare.di;
+package me.kalmanbncz.doggydaycare;
 
 import android.app.Application;
 import me.kalmanbncz.doggydaycare.domain.dog.persistence.DogDatabase;

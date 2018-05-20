@@ -1,12 +1,12 @@
 package me.kalmanbncz.doggydaycare.domain;
 
 import android.support.annotation.StringRes;
-import me.kalmanbncz.doggydaycare.di.scopes.ApplicationScope;
+import me.kalmanbncz.doggydaycare.AppScope;
 
 /**
  * Created by kalman.bencze on 18/05/2018.
  */
-@ApplicationScope
+@AppScope
 public interface ResourcesProvider {
 
     String getString(@StringRes int id);

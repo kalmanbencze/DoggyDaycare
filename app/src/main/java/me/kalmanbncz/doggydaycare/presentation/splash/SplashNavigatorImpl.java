@@ -5,15 +5,14 @@ import android.content.Intent;
 import android.util.Log;
 import java.util.Stack;
 import javax.inject.Inject;
-import me.kalmanbncz.doggydaycare.di.AuthModule;
-import me.kalmanbncz.doggydaycare.di.BrowseModule;
-import me.kalmanbncz.doggydaycare.di.scopes.ApplicationScope;
-import me.kalmanbncz.doggydaycare.di.scopes.flow.AuthFlowScope;
-import me.kalmanbncz.doggydaycare.di.scopes.flow.BrowseFlowScope;
-import me.kalmanbncz.doggydaycare.di.scopes.flow.SplashFlowScope;
+import me.kalmanbncz.doggydaycare.AppScope;
 import me.kalmanbncz.doggydaycare.presentation.Navigator;
 import me.kalmanbncz.doggydaycare.presentation.auth.AuthActivity;
+import me.kalmanbncz.doggydaycare.presentation.auth.AuthFlowScope;
+import me.kalmanbncz.doggydaycare.presentation.auth.AuthModule;
 import me.kalmanbncz.doggydaycare.presentation.browse.BrowseActivity;
+import me.kalmanbncz.doggydaycare.presentation.browse.BrowseFlowScope;
+import me.kalmanbncz.doggydaycare.presentation.browse.BrowseModule;
 import toothpick.Scope;
 import toothpick.Toothpick;
 
@@ -33,7 +32,6 @@ public class SplashNavigatorImpl implements SplashNavigator {
 
     @Inject
     SplashNavigatorImpl(Context context) {
-        Log.d(TAG, "SplashNavigatorImpl: created");
         this.context = context;
     }
 
@@ -48,7 +46,7 @@ public class SplashNavigatorImpl implements SplashNavigator {
             }
             Log.d(TAG, "closeScope: closing SplashFlowScope");
             Toothpick.closeScope(SplashFlowScope.class);
-            Scope splash = Toothpick.openScopes(ApplicationScope.class, AuthFlowScope.class);
+            Scope splash = Toothpick.openScopes(AppScope.class, AuthFlowScope.class);
             splash.bindScopeAnnotation(AuthFlowScope.class);
             splash.installModules(new AuthModule());
             executor.openFlow(new Intent(context, AuthActivity.class), true);
@@ -67,7 +65,7 @@ public class SplashNavigatorImpl implements SplashNavigator {
             }
             Log.d(TAG, "closeScope: closing SplashFlowScope");
             Toothpick.closeScope(SplashFlowScope.class);
-            Scope splash = Toothpick.openScopes(ApplicationScope.class, BrowseFlowScope.class);
+            Scope splash = Toothpick.openScopes(AppScope.class, BrowseFlowScope.class);
             splash.bindScopeAnnotation(BrowseFlowScope.class);
             splash.installModules(new BrowseModule());
             executor.openFlow(new Intent(context, BrowseActivity.class), true);
@@ -77,7 +75,7 @@ public class SplashNavigatorImpl implements SplashNavigator {
     @Override
     public void openSplash() {
         if (executor != null) {
-            Scope scope = Toothpick.openScopes(ApplicationScope.class, SplashFlowScope.class);
+            Scope scope = Toothpick.openScopes(AppScope.class, SplashFlowScope.class);
             scope.bindScopeAnnotation(SplashFlowScope.class);
             SplashFragment fragment = new SplashFragment();
             Toothpick.inject(fragment, scope);

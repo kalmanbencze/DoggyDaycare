@@ -1,7 +1,6 @@
 package me.kalmanbncz.doggydaycare.presentation.browse.dogs;
 
 import me.kalmanbncz.doggydaycare.data.Dog;
-import me.kalmanbncz.doggydaycare.presentation.ItemViewModel;
 import me.kalmanbncz.doggydaycare.presentation.browse.BrowseNavigator;
 
 /**

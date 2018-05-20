@@ -14,7 +14,6 @@ import java.util.Calendar;
 import java.util.List;
 import me.kalmanbncz.doggydaycare.R;
 import me.kalmanbncz.doggydaycare.data.Dog;
-import me.kalmanbncz.doggydaycare.presentation.ItemAdapter;
 import me.kalmanbncz.doggydaycare.presentation.browse.BrowseNavigator;
 import org.apache.commons.lang3.StringUtils;
 

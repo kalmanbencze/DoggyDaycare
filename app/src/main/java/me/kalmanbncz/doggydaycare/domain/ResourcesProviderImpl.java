@@ -4,13 +4,13 @@ import android.content.Context;
 import android.support.annotation.StringRes;
 import android.util.Log;
 import javax.inject.Inject;
+import me.kalmanbncz.doggydaycare.AppScope;
 import me.kalmanbncz.doggydaycare.R;
-import me.kalmanbncz.doggydaycare.di.scopes.ApplicationScope;
 
 /**
  * Created by kalman.bencze on 18/05/2018.
  */
-@ApplicationScope
+@AppScope
 public class ResourcesProviderImpl implements ResourcesProvider {
 
     private static final String TAG = "ResourcesProvider";

@@ -9,15 +9,11 @@ import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.Gravity;
-import me.kalmanbncz.doggydaycare.di.AppModule;
-import me.kalmanbncz.doggydaycare.di.BackendApiModule;
-import me.kalmanbncz.doggydaycare.di.BrowseModule;
-import me.kalmanbncz.doggydaycare.di.DatabaseModule;
-import me.kalmanbncz.doggydaycare.di.scopes.ApplicationScope;
-import me.kalmanbncz.doggydaycare.di.scopes.flow.BrowseFlowScope;
 import me.kalmanbncz.doggydaycare.domain.user.UserRepository;
 import me.kalmanbncz.doggydaycare.presentation.auth.AuthActivity;
 import me.kalmanbncz.doggydaycare.presentation.browse.BrowseActivity;
+import me.kalmanbncz.doggydaycare.presentation.browse.BrowseFlowScope;
+import me.kalmanbncz.doggydaycare.presentation.browse.BrowseModule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,15 +49,15 @@ public class BrowseActivityTest {
             super.beforeActivityLaunched();
             Context appContext = getTargetContext().getApplicationContext();
             Application app = (Application) appContext.getApplicationContext();
-            Scope scope = Toothpick.openScopes(ApplicationScope.class);
-            scope.bindScopeAnnotation(ApplicationScope.class);
+            Scope scope = Toothpick.openScopes(AppScope.class);
+            scope.bindScopeAnnotation(AppScope.class);
             scope.installModules(new AppModule(app));
             scope.installModules(new BackendApiModule(scope.getInstance(Retrofit.class)));
             scope.installModules(new DatabaseModule(app));
             scope.getInstance(UserRepository.class).login("user1", "password");
             Toothpick.inject(this, scope);
 
-            Scope splash = Toothpick.openScopes(ApplicationScope.class, BrowseFlowScope.class);
+            Scope splash = Toothpick.openScopes(AppScope.class, BrowseFlowScope.class);
             splash.bindScopeAnnotation(BrowseFlowScope.class);
             splash.installModules(new BrowseModule());
         }
@@ -70,7 +66,7 @@ public class BrowseActivityTest {
         protected void afterActivityFinished() {
             super.afterActivityFinished();
             Toothpick.closeScope(BrowseFlowScope.class);
-            Toothpick.closeScope(ApplicationScope.class);
+            Toothpick.closeScope(AppScope.class);
         }
     };
 

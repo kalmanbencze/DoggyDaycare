@@ -1,82 +1,24 @@
 package me.kalmanbncz.doggydaycare.presentation.browse.edit;
 
 import io.reactivex.Observable;
-import io.reactivex.subjects.BehaviorSubject;
 import java.util.List;
-import javax.inject.Inject;
 import me.kalmanbncz.doggydaycare.data.Breed;
-import me.kalmanbncz.doggydaycare.data.Dog;
-import me.kalmanbncz.doggydaycare.di.scopes.screen.EditScreenScope;
-import me.kalmanbncz.doggydaycare.domain.ResourcesProvider;
-import me.kalmanbncz.doggydaycare.domain.dog.DogRepository;
 import me.kalmanbncz.doggydaycare.domain.dog.OperationStatus;
 
 /**
- * Created by kalman.bencze on 18/05/2018.
+ * Created by kalman.bencze on 5/20/2018.
  */
-@EditScreenScope
-public class EditViewModel {
+interface EditViewModel {
 
-    private final DogRepository dogRepository;
+    Observable<DogAndBreedsHolder> getDogAndBreedsHolder();
 
-    private final BehaviorSubject<String> title = BehaviorSubject.create();
+    Observable<OperationStatus> save();
 
-    private final BehaviorSubject<String> snackbar = BehaviorSubject.create();
+    Observable<String> getTitle();
 
-    private final BehaviorSubject<Boolean> loading = BehaviorSubject.createDefault(false);
+    Observable<String> getSnackbar();
 
-    private final Observable<Dog> dogObservable;
+    Observable<Boolean> getLoading();
 
-    private Dog dog;
-
-    @Inject
-    EditViewModel(ResourcesProvider resourcesProvider, DogRepository dogRepository, Dog dog) {
-        this.dogRepository = dogRepository;
-        this.dog = dog;
-        this.dogObservable = Observable.just(dog);
-        title.onNext(dog.getId() < 0 ? resourcesProvider.getCreateScreenTitle() : resourcesProvider.getEditScreenTitle());
-    }
-
-    public Dog getDog() {
-        return dog;
-    }
-
-    public Observable<DogAndBreedsHolder> getDogAndBreedsHolder() {
-        return Observable.combineLatest(dogObservable, getBreeds(), DogAndBreedsHolder::new);
-    }
-
-    public Observable<OperationStatus> save() {
-        return dogRepository.addOrUpdate(dog);
-    }
-
-    public Observable<String> getTitle() {
-        return title;
-    }
-
-    public Observable<String> getSnackbar() {
-        return snackbar;
-    }
-
-    public Observable<Boolean> getLoading() {
-        return loading;
-    }
-
-    //public void updateDogFields(String name, String breed, int yearOfBirth, String size, boolean vaccinated, boolean neutered,
-    //                            boolean friendly, String gender, String commands, String eating, String walking, String sleeping) {
-    //    dog.setName(name);
-    //    dog.setBreed(breed);
-    //    dog.setYearOfBirth(String.valueOf(yearOfBirth));
-    //    dog.setVaccinated(vaccinated);
-    //    dog.setNeutered(neutered);
-    //    dog.setFriendly(friendly);
-    //    dog.setGender(gender);
-    //    dog.setCommands(commands);
-    //    dog.setEatingSched(eating);
-    //    dog.setWalkSched(walking);
-    //    dog.setSleepSched(sleeping);
-    //}
-
-    public Observable<List<Breed>> getBreeds() {
-        return dogRepository.getBreeds();
-    }
+    Observable<List<Breed>> getBreeds();
 }

@@ -1,6 +1,7 @@
 package me.kalmanbncz.doggydaycare.presentation;
 
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import hugo.weaving.DebugLog;
 
 /**
@@ -17,7 +18,7 @@ public interface Navigator {
 
     interface Executor {
 
-        void showScreen(BaseFragment screen);
+        void showScreen(Fragment screen);
 
         void openFlow(Intent intent, boolean closeCurrent);
 

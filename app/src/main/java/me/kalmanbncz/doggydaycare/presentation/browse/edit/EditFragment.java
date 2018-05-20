@@ -49,7 +49,10 @@ public class EditFragment extends BaseFragment {
     private static final String TAG = EditFragment.class.getSimpleName();
 
     @Inject
-    EditViewModel viewModel;
+    EditViewModelImpl viewModel;
+
+    @Inject
+    Dog dog;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -142,7 +145,7 @@ public class EditFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_done:
-                if (viewModel.getDog().isValid()) {
+                if (dog.isValid()) {
                     subscriptions.add(viewModel.save()
                                           .subscribeOn(Schedulers.io())
                                           .observeOn(AndroidSchedulers.mainThread())
@@ -156,7 +159,6 @@ public class EditFragment extends BaseFragment {
     }
 
     private void displayErrors() {
-        Dog dog = viewModel.getDog();
         if (dog.getName() == null || dog.getName().isEmpty()) {
             nameEditText.setHint(getString(R.string.name_missing_error));
             nameEditText.setHintTextColor(getResources().getColor(R.color.colorPrimaryDark));
@@ -222,7 +224,7 @@ public class EditFragment extends BaseFragment {
     }
 
     public void setAdapterForSpinner(AppCompatSpinner spinner, List<String> items, String selected, String hint) {
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(spinner.getContext(), android.R.layout.simple_spinner_dropdown_item) {
 
             @Override
             public int getCount() {
@@ -260,11 +262,6 @@ public class EditFragment extends BaseFragment {
         if (visibility != null) {
             progressBar.setVisibility(visibility ? View.VISIBLE : View.GONE);
         }
-    }
-
-    @Override
-    public String getScreenTag() {
-        return TAG;
     }
 
     @Nullable
@@ -319,7 +316,7 @@ public class EditFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                viewModel.getDog().setName(editable.toString());
+                dog.setName(editable.toString());
             }
         };
         nameEditText.addTextChangedListener(nameTextWatcher);
@@ -329,13 +326,13 @@ public class EditFragment extends BaseFragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String value = (String) adapterView.getAdapter().getItem(i);
                 if (value != null && !value.contains("*")) {
-                    viewModel.getDog().setBreed(value);
+                    dog.setBreed(value);
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                viewModel.getDog().setBreed(null);
+                dog.setBreed(null);
             }
         });
         birthdateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -344,13 +341,13 @@ public class EditFragment extends BaseFragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String value = (String) adapterView.getAdapter().getItem(i);
                 if (value != null && !value.contains("*")) {
-                    viewModel.getDog().setYearOfBirth(value);
+                    dog.setYearOfBirth(value);
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                viewModel.getDog().setYearOfBirth(null);
+                dog.setYearOfBirth(null);
             }
         });
         sizeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -359,28 +356,28 @@ public class EditFragment extends BaseFragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String value = (String) adapterView.getAdapter().getItem(i);
                 if (value != null && !value.contains("*")) {
-                    viewModel.getDog().setSize(value);
+                    dog.setSize(value);
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                viewModel.getDog().setSize(null);
+                dog.setSize(null);
             }
         });
         vaccinationsCheckbox.setOnCheckedChangeListener((compoundButton, b) -> {
             if (compoundButton.isPressed()) {
-                viewModel.getDog().setVaccinated(b);
+                dog.setVaccinated(b);
             }
         });
         neuteredCheckbox.setOnCheckedChangeListener((compoundButton, b) -> {
             if (compoundButton.isPressed()) {
-                viewModel.getDog().setNeutered(b);
+                dog.setNeutered(b);
             }
         });
         friendlyCheckbox.setOnCheckedChangeListener((compoundButton, b) -> {
             if (compoundButton.isPressed()) {
-                viewModel.getDog().setFriendly(b);
+                dog.setFriendly(b);
             }
         });
         genderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -389,20 +386,20 @@ public class EditFragment extends BaseFragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String value = (String) adapterView.getAdapter().getItem(i);
                 if (value != null && !value.contains("*")) {
-                    viewModel.getDog().setGender(value);
+                    dog.setGender(value);
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                viewModel.getDog().setGender(null);
+                dog.setGender(null);
             }
         });
         commandsTextWatcher = new TextChangedListener() {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                viewModel.getDog().setCommands(editable.toString());
+                dog.setCommands(editable.toString());
             }
         };
         commandsEditText.addTextChangedListener(commandsTextWatcher);
@@ -410,7 +407,7 @@ public class EditFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                viewModel.getDog().setEatingSched(editable.toString());
+                dog.setEatingSched(editable.toString());
             }
         };
         eatingEditText.addTextChangedListener(eatingTextWatcher);
@@ -418,7 +415,7 @@ public class EditFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                viewModel.getDog().setWalkSched(editable.toString());
+                dog.setWalkSched(editable.toString());
             }
         };
         walkingEditText.addTextChangedListener(walkingTextWatcher);
@@ -426,7 +423,7 @@ public class EditFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                viewModel.getDog().setSleepSched(editable.toString());
+                dog.setSleepSched(editable.toString());
             }
         };
         sleepingEditText.addTextChangedListener(sleepingTextWatcher);

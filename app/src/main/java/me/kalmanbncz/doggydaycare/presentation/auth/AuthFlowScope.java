@@ -1,4 +1,4 @@
-package me.kalmanbncz.doggydaycare.di.scopes.screen;
+package me.kalmanbncz.doggydaycare.presentation.auth;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -11,6 +11,6 @@ import javax.inject.Scope;
 @Scope
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface EditScreenScope {
+public @interface AuthFlowScope {
 
 }

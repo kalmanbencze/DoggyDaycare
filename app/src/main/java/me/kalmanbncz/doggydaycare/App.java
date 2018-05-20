@@ -3,12 +3,8 @@ package me.kalmanbncz.doggydaycare;
 import android.app.Application;
 import android.os.StrictMode;
 import com.squareup.leakcanary.LeakCanary;
-import me.kalmanbncz.doggydaycare.di.AppModule;
-import me.kalmanbncz.doggydaycare.di.BackendApiModule;
-import me.kalmanbncz.doggydaycare.di.DatabaseModule;
-import me.kalmanbncz.doggydaycare.di.SplashModule;
-import me.kalmanbncz.doggydaycare.di.scopes.ApplicationScope;
-import me.kalmanbncz.doggydaycare.di.scopes.flow.SplashFlowScope;
+import me.kalmanbncz.doggydaycare.presentation.splash.SplashFlowScope;
+import me.kalmanbncz.doggydaycare.presentation.splash.SplashModule;
 import retrofit2.Retrofit;
 import toothpick.Scope;
 import toothpick.Toothpick;
@@ -16,9 +12,9 @@ import toothpick.Toothpick;
 /**
  * Created by kalman.bencze on 18/05/2018.
  */
-public class DoggyApplication extends Application {
+public class App extends Application {
 
-    private static final String TAG = DoggyApplication.class.getSimpleName();
+    private static final String TAG = App.class.getSimpleName();
 
     @Override
     public void onCreate() {
@@ -35,13 +31,13 @@ public class DoggyApplication extends Application {
         //        Toothpick.setConfiguration(Configuration.forDevelopment().disableReflection());
         //        MemberInjectorRegistryLocator.setRootRegistry(new me.kalmanbncz.doggydaycare.MemberInjectorRegistry());
         //        FactoryRegistryLocator.setRootRegistry(new me.kalmanbncz.doggydaycare.FactoryRegistry());
-        Scope scope = Toothpick.openScopes(ApplicationScope.class);
-        scope.bindScopeAnnotation(ApplicationScope.class);
+        Scope scope = Toothpick.openScopes(AppScope.class);
+        scope.bindScopeAnnotation(AppScope.class);
         scope.installModules(new AppModule(this));
         scope.installModules(new BackendApiModule(scope.getInstance(Retrofit.class)));
         scope.installModules(new DatabaseModule(this));
         Toothpick.inject(this, scope);
-        Scope splash = Toothpick.openScopes(ApplicationScope.class, SplashFlowScope.class);
+        Scope splash = Toothpick.openScopes(AppScope.class, SplashFlowScope.class);
         splash.bindScopeAnnotation(SplashFlowScope.class);
         splash.installModules(new SplashModule());
     }

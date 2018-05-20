@@ -2,7 +2,6 @@ package me.kalmanbncz.doggydaycare.presentation.browse;
 
 import hugo.weaving.DebugLog;
 import me.kalmanbncz.doggydaycare.data.Dog;
-import me.kalmanbncz.doggydaycare.di.scopes.flow.BrowseFlowScope;
 import me.kalmanbncz.doggydaycare.presentation.Navigator;
 
 /**

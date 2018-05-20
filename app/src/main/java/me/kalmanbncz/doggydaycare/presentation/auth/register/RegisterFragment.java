@@ -56,6 +56,36 @@ public class RegisterFragment extends BaseFragment {
 
     private CompositeDisposable subscriptions = new CompositeDisposable();
 
+    private void onCompleted() {
+        Log.d(TAG, "onCompleted: ");
+    }
+
+    private void showFormatError(boolean valid) {
+        loginButton.setEnabled(valid);
+    }
+
+    private void onStateChanged(LoginState loginState) {
+        switch (loginState) {
+            case LOGGED_IN:
+                navigator.openBrowse();
+                break;
+            case LOGGED_OUT:
+                progressBar.setVisibility(View.GONE);
+                break;
+        }
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
+        ButterKnife.bind(this, view);
+        if (getActivity() != null) {
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        }
+        return view;
+    }
+
     @SuppressLint("SetTextI18n")
     @Override
     public void onStart() {
@@ -111,44 +141,9 @@ public class RegisterFragment extends BaseFragment {
         });
     }
 
-    private void onCompleted() {
-        Log.d(TAG, "onCompleted: ");
-    }
-
     @Override
     public void onStop() {
         subscriptions.clear();
         super.onStop();
-    }
-
-    private void showFormatError(boolean valid) {
-        loginButton.setEnabled(valid);
-    }
-
-    private void onStateChanged(LoginState loginState) {
-        switch (loginState) {
-            case LOGGED_IN:
-                navigator.openBrowse();
-                break;
-            case LOGGED_OUT:
-                progressBar.setVisibility(View.GONE);
-                break;
-        }
-    }
-
-    @Override
-    public String getScreenTag() {
-        return TAG;
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_login, container, false);
-        ButterKnife.bind(this, view);
-        if (getActivity() != null) {
-            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        }
-        return view;
     }
 }

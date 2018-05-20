@@ -3,13 +3,12 @@ package me.kalmanbncz.doggydaycare.presentation.auth;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import javax.inject.Inject;
+import me.kalmanbncz.doggydaycare.AppScope;
 import me.kalmanbncz.doggydaycare.R;
-import me.kalmanbncz.doggydaycare.di.scopes.ApplicationScope;
-import me.kalmanbncz.doggydaycare.di.scopes.flow.AuthFlowScope;
-import me.kalmanbncz.doggydaycare.presentation.BaseFragment;
 import me.kalmanbncz.doggydaycare.presentation.Navigator;
 import toothpick.Scope;
 import toothpick.Toothpick;
@@ -27,7 +26,7 @@ public class AuthActivity extends AppCompatActivity implements Navigator.Executo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Scope auth = Toothpick.openScopes(ApplicationScope.class, AuthFlowScope.class);
+        Scope auth = Toothpick.openScopes(AppScope.class, AuthFlowScope.class);
         auth.bindScopeAnnotation(AuthFlowScope.class);
         Toothpick.inject(this, auth);
         setContentView(R.layout.activity_auth);
@@ -63,11 +62,11 @@ public class AuthActivity extends AppCompatActivity implements Navigator.Executo
     }
 
     @Override
-    public void showScreen(BaseFragment screen) {
+    public void showScreen(Fragment screen) {
         runOnUiThread(() -> {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.addToBackStack(screen.getScreenTag());
-            transaction.add(R.id.main_container, screen, screen.getScreenTag());
+            transaction.addToBackStack(screen.getClass().getSimpleName());
+            transaction.add(R.id.main_container, screen, screen.getClass().getSimpleName());
             transaction.commit();
             getSupportFragmentManager().executePendingTransactions();
         });

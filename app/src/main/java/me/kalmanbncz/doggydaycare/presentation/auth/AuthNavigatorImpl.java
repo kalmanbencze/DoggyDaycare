@@ -5,15 +5,16 @@ import android.content.Intent;
 import android.util.Log;
 import java.util.Stack;
 import javax.inject.Inject;
-import me.kalmanbncz.doggydaycare.di.BrowseModule;
-import me.kalmanbncz.doggydaycare.di.scopes.ApplicationScope;
-import me.kalmanbncz.doggydaycare.di.scopes.flow.AuthFlowScope;
-import me.kalmanbncz.doggydaycare.di.scopes.flow.BrowseFlowScope;
-import me.kalmanbncz.doggydaycare.di.scopes.screen.LoginScreenScope;
-import me.kalmanbncz.doggydaycare.di.scopes.screen.RegisterScreenScope;
+import me.kalmanbncz.doggydaycare.AppScope;
 import me.kalmanbncz.doggydaycare.presentation.auth.login.LoginFragment;
+import me.kalmanbncz.doggydaycare.presentation.auth.login.LoginModule;
+import me.kalmanbncz.doggydaycare.presentation.auth.login.LoginScreenScope;
 import me.kalmanbncz.doggydaycare.presentation.auth.register.RegisterFragment;
+import me.kalmanbncz.doggydaycare.presentation.auth.register.RegisterModule;
+import me.kalmanbncz.doggydaycare.presentation.auth.register.RegisterScreenScope;
 import me.kalmanbncz.doggydaycare.presentation.browse.BrowseActivity;
+import me.kalmanbncz.doggydaycare.presentation.browse.BrowseFlowScope;
+import me.kalmanbncz.doggydaycare.presentation.browse.BrowseModule;
 import toothpick.Scope;
 import toothpick.Toothpick;
 
@@ -21,7 +22,7 @@ import toothpick.Toothpick;
  * Created by kalman.bencze on 18/05/2018.
  */
 @AuthFlowScope
-public class AuthNavigatorImpl implements AuthNavigator {
+class AuthNavigatorImpl implements AuthNavigator {
 
     private static final String TAG = "AuthNavigatorImpl";
 
@@ -41,8 +42,9 @@ public class AuthNavigatorImpl implements AuthNavigator {
     public void openLogin() {
         Log.d(TAG, "openLogin: ");
         if (executor != null) {
-            Scope scope = Toothpick.openScopes(ApplicationScope.class, AuthFlowScope.class, LoginScreenScope.class);
+            Scope scope = Toothpick.openScopes(AppScope.class, AuthFlowScope.class, LoginScreenScope.class);
             scope.bindScopeAnnotation(LoginScreenScope.class);
+            scope.installModules(new LoginModule());
             LoginFragment fragment = new LoginFragment();
             Toothpick.inject(fragment, scope);
             scopeStack.add(scope);
@@ -56,8 +58,9 @@ public class AuthNavigatorImpl implements AuthNavigator {
     public void openRegister() {
         Log.d(TAG, "openRegister: ");
         if (executor != null) {
-            Scope scope = Toothpick.openScopes(ApplicationScope.class, AuthFlowScope.class, RegisterScreenScope.class);
+            Scope scope = Toothpick.openScopes(AppScope.class, AuthFlowScope.class, RegisterScreenScope.class);
             scope.bindScopeAnnotation(RegisterScreenScope.class);
+            scope.installModules(new RegisterModule());
             RegisterFragment fragment = new RegisterFragment();
             Toothpick.inject(fragment, scope);
             scopeStack.add(scope);
@@ -77,9 +80,9 @@ public class AuthNavigatorImpl implements AuthNavigator {
             }
             Log.d(TAG, "closeScope: closing AuthFlowScope");
             Toothpick.closeScope(AuthFlowScope.class);
-            Scope splash = Toothpick.openScopes(ApplicationScope.class, BrowseFlowScope.class);
-            splash.bindScopeAnnotation(BrowseFlowScope.class);
-            splash.installModules(new BrowseModule());
+            Scope browse = Toothpick.openScopes(AppScope.class, BrowseFlowScope.class);
+            browse.bindScopeAnnotation(BrowseFlowScope.class);
+            browse.installModules(new BrowseModule());
             executor.openFlow(new Intent(context, BrowseActivity.class), true);
         }
     }

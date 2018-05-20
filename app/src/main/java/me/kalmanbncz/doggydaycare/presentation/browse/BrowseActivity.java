@@ -3,13 +3,12 @@ package me.kalmanbncz.doggydaycare.presentation.browse;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import javax.inject.Inject;
+import me.kalmanbncz.doggydaycare.AppScope;
 import me.kalmanbncz.doggydaycare.R;
-import me.kalmanbncz.doggydaycare.di.scopes.ApplicationScope;
-import me.kalmanbncz.doggydaycare.di.scopes.flow.BrowseFlowScope;
-import me.kalmanbncz.doggydaycare.presentation.BaseFragment;
 import me.kalmanbncz.doggydaycare.presentation.Navigator;
 import toothpick.Scope;
 import toothpick.Toothpick;
@@ -27,7 +26,7 @@ public class BrowseActivity extends AppCompatActivity implements Navigator.Execu
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Scope browse = Toothpick.openScopes(ApplicationScope.class, BrowseFlowScope.class);
+        Scope browse = Toothpick.openScopes(AppScope.class, BrowseFlowScope.class);
         browse.bindScopeAnnotation(BrowseFlowScope.class);
         Toothpick.inject(this, browse);
         setContentView(R.layout.activity_browse);
@@ -63,11 +62,11 @@ public class BrowseActivity extends AppCompatActivity implements Navigator.Execu
     }
 
     @Override
-    public void showScreen(BaseFragment screen) {
+    public void showScreen(Fragment screen) {
         runOnUiThread(() -> {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.addToBackStack(screen.getScreenTag());
-            transaction.add(R.id.main_container, screen, screen.getScreenTag());
+            transaction.addToBackStack(screen.getClass().getSimpleName());
+            transaction.add(R.id.main_container, screen, screen.getClass().getSimpleName());
             transaction.commit();
             getSupportFragmentManager().executePendingTransactions();
         });

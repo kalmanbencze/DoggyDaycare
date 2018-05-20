@@ -1,7 +1,6 @@
 package me.kalmanbncz.doggydaycare.presentation.splash;
 
 import hugo.weaving.DebugLog;
-import me.kalmanbncz.doggydaycare.di.scopes.flow.SplashFlowScope;
 import me.kalmanbncz.doggydaycare.presentation.Navigator;
 
 /**

@@ -3,14 +3,12 @@ package me.kalmanbncz.doggydaycare.presentation.splash;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import javax.inject.Inject;
+import me.kalmanbncz.doggydaycare.AppScope;
 import me.kalmanbncz.doggydaycare.R;
-import me.kalmanbncz.doggydaycare.di.SplashModule;
-import me.kalmanbncz.doggydaycare.di.scopes.ApplicationScope;
-import me.kalmanbncz.doggydaycare.di.scopes.flow.SplashFlowScope;
-import me.kalmanbncz.doggydaycare.presentation.BaseFragment;
 import toothpick.Scope;
 import toothpick.Toothpick;
 
@@ -28,7 +26,7 @@ public class SplashActivity extends AppCompatActivity implements SplashNavigator
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        Scope splash = Toothpick.openScopes(ApplicationScope.class, SplashFlowScope.class);
+        Scope splash = Toothpick.openScopes(AppScope.class, SplashFlowScope.class);
         splash.bindScopeAnnotation(SplashFlowScope.class);
         splash.installModules(new SplashModule());
         Toothpick.inject(this, splash);
@@ -59,11 +57,11 @@ public class SplashActivity extends AppCompatActivity implements SplashNavigator
     }
 
     @Override
-    public void showScreen(BaseFragment screen) {
+    public void showScreen(Fragment screen) {
         runOnUiThread(() -> {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.addToBackStack(screen.getScreenTag());
-            transaction.add(R.id.main_container, screen, screen.getScreenTag());
+            transaction.addToBackStack(screen.getClass().getSimpleName());
+            transaction.add(R.id.main_container, screen, screen.getClass().getSimpleName());
             transaction.commit();
             getSupportFragmentManager().executePendingTransactions();
         });

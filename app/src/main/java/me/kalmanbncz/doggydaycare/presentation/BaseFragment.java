@@ -26,16 +26,12 @@ import me.kalmanbncz.doggydaycare.R;
  */
 public abstract class BaseFragment extends Fragment implements FragmentManager.OnBackStackChangedListener {
 
-    private static final String TAG = "LoginFragment";
-
     @BindView(R.id.toolbar)
     protected Toolbar toolbar;
 
     private Snackbar snackbar;
 
     private Handler uiHandler = new Handler(Looper.getMainLooper());
-
-    public abstract String getScreenTag();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -138,7 +134,8 @@ public abstract class BaseFragment extends Fragment implements FragmentManager.O
         if (getFragmentManager() != null) {
             navigationStackIsEmpty = getFragmentManager().getBackStackEntryCount() <= 1;
             if (getActionBar() != null) {
-                Drawable upArrow = AppCompatResources.getDrawable(getContext(), R.drawable.vector_close); ;
+                Drawable upArrow = AppCompatResources.getDrawable(getContext(), R.drawable.vector_close);
+                ;
                 getActionBar().setDisplayHomeAsUpEnabled(!navigationStackIsEmpty);
                 if (!navigationStackIsEmpty) {
                     getActionBar().setHomeAsUpIndicator(upArrow);

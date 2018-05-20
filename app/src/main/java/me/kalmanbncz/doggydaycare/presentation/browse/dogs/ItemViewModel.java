@@ -1,4 +1,4 @@
-package me.kalmanbncz.doggydaycare.presentation;
+package me.kalmanbncz.doggydaycare.presentation.browse.dogs;
 
 /**
  * Created by kalman.bencze on 18/05/2018.

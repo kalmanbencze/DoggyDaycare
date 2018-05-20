@@ -1,7 +1,6 @@
 package me.kalmanbncz.doggydaycare.presentation.auth;
 
 import hugo.weaving.DebugLog;
-import me.kalmanbncz.doggydaycare.di.scopes.flow.AuthFlowScope;
 import me.kalmanbncz.doggydaycare.presentation.Navigator;
 
 /**

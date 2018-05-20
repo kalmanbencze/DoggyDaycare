@@ -1,4 +1,4 @@
-package me.kalmanbncz.doggydaycare.presentation;
+package me.kalmanbncz.doggydaycare.presentation.browse.dogs;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

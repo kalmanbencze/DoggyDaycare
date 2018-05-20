@@ -1,7 +1,5 @@
-package me.kalmanbncz.doggydaycare.di;
+package me.kalmanbncz.doggydaycare.presentation.splash;
 
-import me.kalmanbncz.doggydaycare.presentation.splash.SplashNavigator;
-import me.kalmanbncz.doggydaycare.presentation.splash.SplashNavigatorImpl;
 import toothpick.config.Module;
 
 /**
@@ -11,5 +9,6 @@ public class SplashModule extends Module {
 
     public SplashModule() {
         bind(SplashNavigator.class).to(SplashNavigatorImpl.class).singletonInScope();
+        bind(SplashViewModel.class).to(SplashViewModelImpl.class).singletonInScope();
     }
 }
