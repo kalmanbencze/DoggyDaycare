@@ -5,7 +5,7 @@ package me.kalmanbncz.doggydaycare.data;
  */
 public class Dog {
 
-    private int id = -1;
+    private int id = 0;
 
     private String name;
 
