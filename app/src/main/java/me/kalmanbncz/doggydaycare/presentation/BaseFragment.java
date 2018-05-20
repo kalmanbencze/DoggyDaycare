@@ -10,9 +10,9 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -138,7 +138,7 @@ public abstract class BaseFragment extends Fragment implements FragmentManager.O
         if (getFragmentManager() != null) {
             navigationStackIsEmpty = getFragmentManager().getBackStackEntryCount() <= 1;
             if (getActionBar() != null) {
-                Drawable upArrow = ResourcesCompat.getDrawable(getResources(), R.drawable.vector_close, null);
+                Drawable upArrow = AppCompatResources.getDrawable(getContext(), R.drawable.vector_close); ;
                 getActionBar().setDisplayHomeAsUpEnabled(!navigationStackIsEmpty);
                 getActionBar().setHomeAsUpIndicator(upArrow);
             }
