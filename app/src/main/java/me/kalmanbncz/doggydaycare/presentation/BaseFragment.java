@@ -1,5 +1,6 @@
 package me.kalmanbncz.doggydaycare.presentation;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -9,6 +10,7 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -136,7 +138,9 @@ public abstract class BaseFragment extends Fragment implements FragmentManager.O
         if (getFragmentManager() != null) {
             navigationStackIsEmpty = getFragmentManager().getBackStackEntryCount() <= 1;
             if (getActionBar() != null) {
+                Drawable upArrow = ResourcesCompat.getDrawable(getResources(), R.drawable.vector_close, null);
                 getActionBar().setDisplayHomeAsUpEnabled(!navigationStackIsEmpty);
+                getActionBar().setHomeAsUpIndicator(upArrow);
             }
         }
     }
