@@ -52,14 +52,14 @@ public class DogsFragment extends BaseFragment {
     @BindView(R.id.navigation_view)
     protected NavigationView navigationView;
 
-    @Inject
-    BrowseNavigator browseNavigator;
-
     @BindView(R.id.empty_layout)
     protected ViewGroup emptyLayout;
 
     @BindView(R.id.add_first_dog)
     protected AppCompatButton addFirstDogButton;
+
+    @Inject
+    BrowseNavigator browseNavigator;
 
     @BindView(R.id.dogs_list)
     RecyclerView recyclerView;
@@ -165,6 +165,17 @@ public class DogsFragment extends BaseFragment {
         recyclerView.addOnScrollListener(scrollListener);
     }
 
+    @Override
+    public void onStop() {
+        recyclerView.removeOnScrollListener(scrollListener);
+        recyclerView.removeItemDecoration(itemDecoration);
+        itemDecoration = null;
+        recyclerView.setAdapter(null);
+        recyclerView.setLayoutManager(null);
+        subscriptions.clear();
+        super.onStop();
+    }
+
     private void onUserNameChanged(String username) {
         View headerView = navigationView.getHeaderView(0);
 
@@ -183,17 +194,6 @@ public class DogsFragment extends BaseFragment {
             recyclerView.setVisibility(View.GONE);
             addFirstDogButton.setOnClickListener(view -> browseNavigator.openAdd());
         }
-    }
-
-    @Override
-    public void onStop() {
-        recyclerView.removeOnScrollListener(scrollListener);
-        recyclerView.removeItemDecoration(itemDecoration);
-        itemDecoration = null;
-        recyclerView.setAdapter(null);
-        recyclerView.setLayoutManager(null);
-        subscriptions.clear();
-        super.onStop();
     }
 
     @Override

@@ -59,6 +59,50 @@ public class LoginFragment extends BaseFragment {
 
     private CompositeDisposable subscriptions = new CompositeDisposable();
 
+    private void onCompleted() {
+        Log.d(TAG, "onCompleted: ");
+    }
+
+    private void showFormatError(boolean valid) {
+        loginButton.setEnabled(valid);
+    }
+
+    private void onStateChanged(LoginState loginState) {
+        switch (loginState) {
+            case LOGGED_IN:
+                Log.d("Kali", "onStateChanged: opening browse flow");
+                navigator.openBrowse();
+                break;
+            case LOGGED_OUT:
+                loginButton.setEnabled(true);
+                usernameEditText.setEnabled(true);
+                passwordEditText.setEnabled(true);
+                progressBar.setVisibility(View.GONE);
+                break;
+            case LOGIN_ERROR:
+                loginButton.setEnabled(true);
+                usernameEditText.setEnabled(true);
+                passwordEditText.setEnabled(true);
+                break;
+        }
+    }
+
+    @Override
+    public String getScreenTag() {
+        return TAG;
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
+        ButterKnife.bind(this, view);
+        if (getActivity() != null) {
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        }
+        return view;
+    }
+
     @SuppressLint("SetTextI18n")
     @Override
     public void onStart() {
@@ -141,53 +185,9 @@ public class LoginFragment extends BaseFragment {
         registerButton.setOnClickListener(view -> navigator.openRegister());
     }
 
-    private void onCompleted() {
-        Log.d(TAG, "onCompleted: ");
-    }
-
     @Override
     public void onStop() {
         subscriptions.clear();
         super.onStop();
-    }
-
-    private void showFormatError(boolean valid) {
-        loginButton.setEnabled(valid);
-    }
-
-    private void onStateChanged(LoginState loginState) {
-        switch (loginState) {
-            case LOGGED_IN:
-                Log.d("Kali", "onStateChanged: opening browse flow");
-                navigator.openBrowse();
-                break;
-            case LOGGED_OUT:
-                loginButton.setEnabled(true);
-                usernameEditText.setEnabled(true);
-                passwordEditText.setEnabled(true);
-                progressBar.setVisibility(View.GONE);
-                break;
-            case LOGIN_ERROR:
-                loginButton.setEnabled(true);
-                usernameEditText.setEnabled(true);
-                passwordEditText.setEnabled(true);
-                break;
-        }
-    }
-
-    @Override
-    public String getScreenTag() {
-        return TAG;
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_login, container, false);
-        ButterKnife.bind(this, view);
-        if (getActivity() != null) {
-            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        }
-        return view;
     }
 }

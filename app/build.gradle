@@ -71,12 +71,16 @@ dependencies {
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${ext.leakCanaryVersion}"
 
     testImplementation "com.github.stephanenicolas.toothpick:toothpick-testing:${ext.toothpickVersion}"
-    testImplementation 'org.easymock:easymock:3.4'
-    testImplementation 'com.google.truth:truth:0.34'
-    testImplementation 'org.powermock:powermock-easymock-release-full:1.6.4'
-    testImplementation 'org.robolectric:robolectric:3.4.2'
 
     testImplementation "junit:junit:4.12"
-    androidTestImplementation "com.android.support.test:runner:1.0.2"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:3.0.2"
+    testImplementation "org.mockito:mockito-core:${ext.mockitoVersion}"
+    androidTestImplementation "com.android.support.test:runner:${ext.runnerVersion}"
+    androidTestImplementation "com.android.support.test:rules:${ext.rulesVersion}"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:${ext.espressoVersion}"
+    androidTestImplementation "com.android.support.test.espresso:espresso-contrib:${ext.espressoVersion}"
+    androidTestImplementation "com.android.support.test.espresso:espresso-intents:${ext.espressoVersion}"
+
+    // Force usage of dependencies in the test app, since it is internally used by the runner module.
+    androidTestImplementation "com.android.support:support-annotations:${ext.supportVersion}"
+    androidTestImplementation "com.android.support:recyclerview-v7:${ext.supportVersion}"
 }
