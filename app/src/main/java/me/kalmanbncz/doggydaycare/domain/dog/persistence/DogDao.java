@@ -13,13 +13,10 @@ import java.util.List;
 @Dao
 public abstract class DogDao {
 
-    @Query("SELECT * FROM DogsTable")
+    @Query("SELECT * FROM DogsTable ORDER BY id ASC")
     public abstract Flowable<List<DogEntity>> getDogs();
 
-    @Query("SELECT * FROM DogsTable")
-    public abstract List<DogEntity> getDogsList();
-
-    @Query("SELECT * FROM BreedsTable")
+    @Query("SELECT * FROM BreedsTable ORDER BY id ASC")
     public abstract Flowable<List<BreedEntity>> getBreeds();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -27,9 +24,6 @@ public abstract class DogDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract void insertAll(DogEntity... dogEntities);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract void insertAll(BreedEntity... breedEntities);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract void insert(BreedEntity entity);
