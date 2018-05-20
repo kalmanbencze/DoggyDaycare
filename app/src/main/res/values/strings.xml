@@ -27,6 +27,7 @@
     <string name="login_error">Error logging in, please try again.</string>
     <string name="done">Done</string>
     <string name="error_message">Something went wrong, please try again later.</string>
+    <string name="error_message_sync">The server is offline, we\'ll sync your changes later.</string>
     <string name="breed_hint_label">Breed*</string>
     <string name="birth_year_hint_label">Year of birth*</string>
     <string name="size_hint_label">Dog Size*</string>
@@ -35,4 +36,11 @@
     <string name="log_out_confirmation_message">Do you really want to log out?</string>
     <string name="yes_label">Yes</string>
     <string name="no_label">No</string>
+    <string name="name_missing_error">*Please add a name</string>
+    <string name="register">Register</string>
+    <string name="ok">OK</string>
+    <string name="no_selection_gender_error">\*Please select gender</string>
+    <string name="no_selection_breed_error">\*Please select breed</string>
+    <string name="no_selection_year_error">\*Please select year of birth</string>
+    <string name="no_selection_size_error">\*Please select size</string>
 </resources>

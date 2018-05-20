@@ -25,7 +25,6 @@ import me.kalmanbncz.doggydaycare.R;
 import me.kalmanbncz.doggydaycare.data.LoginState;
 import me.kalmanbncz.doggydaycare.presentation.BaseFragment;
 import me.kalmanbncz.doggydaycare.presentation.auth.AuthNavigator;
-import me.kalmanbncz.doggydaycare.presentation.auth.login.LoginViewModel;
 
 /**
  * Created by kalman.bencze on 18/05/2018.
@@ -53,7 +52,7 @@ public class RegisterFragment extends BaseFragment {
     AuthNavigator navigator;
 
     @Inject
-    LoginViewModel viewModel;
+    RegisterViewModel viewModel;
 
     private CompositeDisposable subscriptions = new CompositeDisposable();
 

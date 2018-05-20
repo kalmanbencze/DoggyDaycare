@@ -9,6 +9,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -53,6 +54,12 @@ public class DogsFragment extends BaseFragment {
 
     @Inject
     BrowseNavigator browseNavigator;
+
+    @BindView(R.id.empty_layout)
+    protected ViewGroup emptyLayout;
+
+    @BindView(R.id.add_first_dog)
+    protected AppCompatButton addFirstDogButton;
 
     @BindView(R.id.dogs_list)
     RecyclerView recyclerView;
@@ -166,7 +173,16 @@ public class DogsFragment extends BaseFragment {
     }
 
     private void addDogs(List<Dog> dogs) {
-        adapter.addItems(dogs);
+        adapter.setItems(dogs);
+        if (dogs.size() > 0) {
+            emptyLayout.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            addFirstDogButton.setOnClickListener(null);
+        } else {
+            emptyLayout.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+            addFirstDogButton.setOnClickListener(view -> browseNavigator.openAdd());
+        }
     }
 
     @Override
@@ -229,6 +245,7 @@ public class DogsFragment extends BaseFragment {
             switch (item.getItemId()) {
                 case R.id.navigation_about:
                     showSnackbar("About Selected");
+                    return true;
                 case R.id.navigation_logout:
                     new AlertDialog.Builder(getContext())
                         .setTitle(R.string.logout_title_label)
@@ -236,6 +253,7 @@ public class DogsFragment extends BaseFragment {
                         .setPositiveButton(R.string.yes_label, (dialogInterface, i) -> viewModel.logout())
                         .setNegativeButton(R.string.no_label, (dialogInterface, i) -> dialogInterface.cancel())
                         .show();
+                    return true;
             }
             return true;
         });

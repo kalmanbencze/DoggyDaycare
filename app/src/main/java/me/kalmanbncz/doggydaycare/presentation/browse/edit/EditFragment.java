@@ -3,12 +3,16 @@ package me.kalmanbncz.doggydaycare.presentation.browse.edit;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -76,14 +81,26 @@ public class EditFragment extends BaseFragment {
     @BindView(R.id.commands_edittext)
     TextInputEditText commandsEditText;
 
+    @BindView(R.id.commands_textinput)
+    TextInputLayout commandsTextInputLayout;
+
     @BindView(R.id.eating_edittext)
     TextInputEditText eatingEditText;
+
+    @BindView(R.id.eating_textinput)
+    TextInputLayout eatingTextInputLayout;
 
     @BindView(R.id.walking_edittext)
     TextInputEditText walkingEditText;
 
+    @BindView(R.id.walking_textinput)
+    TextInputLayout walkingTextInputLayout;
+
     @BindView(R.id.sleeping_edittext)
     TextInputEditText sleepingEditText;
+
+    @BindView(R.id.sleeping_textinput)
+    TextInputLayout sleepingTextInputLayout;
 
     @Inject
     BrowseNavigator navigator;
@@ -92,6 +109,16 @@ public class EditFragment extends BaseFragment {
     ContentLoadingProgressBar progressBar;
 
     private CompositeDisposable subscriptions = new CompositeDisposable();
+
+    private TextChangedListener nameTextWatcher;
+
+    private TextChangedListener commandsTextWatcher;
+
+    private TextChangedListener eatingTextWatcher;
+
+    private TextChangedListener walkingTextWatcher;
+
+    private TextChangedListener sleepingTextWatcher;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -115,13 +142,41 @@ public class EditFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_done:
-                subscriptions.add(viewModel.save()
-                                      .subscribeOn(Schedulers.io())
-                                      .observeOn(AndroidSchedulers.mainThread())
-                                      .subscribe(this::onSaved, this::onError));
+                if (viewModel.getDog().isValid()) {
+                    subscriptions.add(viewModel.save()
+                                          .subscribeOn(Schedulers.io())
+                                          .observeOn(AndroidSchedulers.mainThread())
+                                          .subscribe(this::onSaved, this::onError));
+                } else {
+                    displayErrors();
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void displayErrors() {
+        Dog dog = viewModel.getDog();
+        if (dog.getName() == null || dog.getName().isEmpty()) {
+            nameEditText.setHint(getString(R.string.name_missing_error));
+            nameEditText.setHintTextColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
+        if (dog.getGender() == null) {
+            ((TextView) genderSpinner.getSelectedView()).setText(getString(R.string.no_selection_gender_error));
+            ((TextView) genderSpinner.getSelectedView()).setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
+        if (dog.getBreed() == null) {
+            ((TextView) breedSpinner.getSelectedView()).setText(getString(R.string.no_selection_breed_error));
+            ((TextView) breedSpinner.getSelectedView()).setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
+        if (dog.getYearOfBirth() == null) {
+            ((TextView) birthdateSpinner.getSelectedView()).setText(getString(R.string.no_selection_year_error));
+            ((TextView) birthdateSpinner.getSelectedView()).setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
+        if (dog.getSize() == null) {
+            ((TextView) sizeSpinner.getSelectedView()).setText(getString(R.string.no_selection_size_error));
+            ((TextView) sizeSpinner.getSelectedView()).setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
     }
 
     private void setDogInfoAndBreeds(DogAndBreedsHolder dogAndBreedsHolder) {
@@ -222,7 +277,7 @@ public class EditFragment extends BaseFragment {
     public void onStart() {
         super.onStart();
         Log.d(TAG, "onStart: ");
-
+        setListeners();
         subscriptions.add(viewModel.getDogAndBreedsHolder()
                               .subscribeOn(Schedulers.io())
                               .observeOn(AndroidSchedulers.mainThread())
@@ -254,15 +309,173 @@ public class EditFragment extends BaseFragment {
 
     @Override
     public void onStop() {
+        removeListeners();
         subscriptions.clear();
         super.onStop();
+    }
+
+    public void setListeners() {
+        nameTextWatcher = new TextChangedListener() {
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                viewModel.getDog().setName(editable.toString());
+            }
+        };
+        nameEditText.addTextChangedListener(nameTextWatcher);
+        breedSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String value = (String) adapterView.getAdapter().getItem(i);
+                if (value != null && !value.contains("*")) {
+                    viewModel.getDog().setBreed(value);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                viewModel.getDog().setBreed(null);
+            }
+        });
+        birthdateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String value = (String) adapterView.getAdapter().getItem(i);
+                if (value != null && !value.contains("*")) {
+                    viewModel.getDog().setYearOfBirth(value);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                viewModel.getDog().setYearOfBirth(null);
+            }
+        });
+        sizeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String value = (String) adapterView.getAdapter().getItem(i);
+                if (value != null && !value.contains("*")) {
+                    viewModel.getDog().setSize(value);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                viewModel.getDog().setSize(null);
+            }
+        });
+        vaccinationsCheckbox.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (compoundButton.isPressed()) {
+                viewModel.getDog().setVaccinated(b);
+            }
+        });
+        neuteredCheckbox.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (compoundButton.isPressed()) {
+                viewModel.getDog().setNeutered(b);
+            }
+        });
+        friendlyCheckbox.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (compoundButton.isPressed()) {
+                viewModel.getDog().setFriendly(b);
+            }
+        });
+        genderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String value = (String) adapterView.getAdapter().getItem(i);
+                if (value != null && !value.contains("*")) {
+                    viewModel.getDog().setGender(value);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                viewModel.getDog().setGender(null);
+            }
+        });
+        commandsTextWatcher = new TextChangedListener() {
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                viewModel.getDog().setCommands(editable.toString());
+            }
+        };
+        commandsEditText.addTextChangedListener(commandsTextWatcher);
+        eatingTextWatcher = new TextChangedListener() {
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                viewModel.getDog().setEatingSched(editable.toString());
+            }
+        };
+        eatingEditText.addTextChangedListener(eatingTextWatcher);
+        walkingTextWatcher = new TextChangedListener() {
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                viewModel.getDog().setWalkSched(editable.toString());
+            }
+        };
+        walkingEditText.addTextChangedListener(walkingTextWatcher);
+        sleepingTextWatcher = new TextChangedListener() {
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                viewModel.getDog().setSleepSched(editable.toString());
+            }
+        };
+        sleepingEditText.addTextChangedListener(sleepingTextWatcher);
+    }
+
+    private void removeListeners() {
+        nameEditText.removeTextChangedListener(nameTextWatcher);
+        nameTextWatcher = null;
+        breedSpinner.setOnItemSelectedListener(null);
+        birthdateSpinner.setOnItemSelectedListener(null);
+        sizeSpinner.setOnItemSelectedListener(null);
+        vaccinationsCheckbox.setOnCheckedChangeListener(null);
+        neuteredCheckbox.setOnCheckedChangeListener(null);
+        friendlyCheckbox.setOnCheckedChangeListener(null);
+        genderSpinner.setOnItemSelectedListener(null);
+        commandsEditText.removeTextChangedListener(commandsTextWatcher);
+        commandsTextWatcher = null;
+        eatingEditText.removeTextChangedListener(eatingTextWatcher);
+        eatingTextWatcher = null;
+        walkingEditText.removeTextChangedListener(walkingTextWatcher);
+        walkingTextWatcher = null;
+        sleepingEditText.removeTextChangedListener(sleepingTextWatcher);
+        sleepingTextWatcher = null;
     }
 
     private void onSaved(OperationStatus status) {
         if (status.isSuccess()) {
             navigator.back();
         } else {
-            showSnackbar(getString(R.string.error_message));
+            showSnackbar(getString(R.string.error_message_sync), Snackbar.LENGTH_INDEFINITE, getString(R.string.ok),
+                         () -> navigator.back());
+        }
+    }
+
+    private class TextChangedListener implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
         }
     }
 }

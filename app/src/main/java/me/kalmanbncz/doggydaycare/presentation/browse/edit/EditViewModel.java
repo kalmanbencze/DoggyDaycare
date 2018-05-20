@@ -37,6 +37,10 @@ public class EditViewModel {
         title.onNext(dog.getId() < 0 ? resourcesProvider.getCreateScreenTitle() : resourcesProvider.getEditScreenTitle());
     }
 
+    public Dog getDog() {
+        return dog;
+    }
+
     public Observable<DogAndBreedsHolder> getDogAndBreedsHolder() {
         return Observable.combineLatest(dogObservable, getBreeds(), DogAndBreedsHolder::new);
     }
@@ -57,20 +61,20 @@ public class EditViewModel {
         return loading;
     }
 
-    public void updateDogFields(String name, String breed, int yearOfBirth, String size, boolean vaccinated, boolean neutered,
-                                boolean friendly, String gender, String commands, String eating, String walking, String sleeping) {
-        dog.setName(name);
-        dog.setBreed(breed);
-        dog.setYearOfBirth(String.valueOf(yearOfBirth));
-        dog.setVaccinated(vaccinated);
-        dog.setNeutered(neutered);
-        dog.setFriendly(friendly);
-        dog.setGender(gender);
-        dog.setCommands(commands);
-        dog.setEatingSched(eating);
-        dog.setWalkSched(walking);
-        dog.setSleepSched(sleeping);
-    }
+    //public void updateDogFields(String name, String breed, int yearOfBirth, String size, boolean vaccinated, boolean neutered,
+    //                            boolean friendly, String gender, String commands, String eating, String walking, String sleeping) {
+    //    dog.setName(name);
+    //    dog.setBreed(breed);
+    //    dog.setYearOfBirth(String.valueOf(yearOfBirth));
+    //    dog.setVaccinated(vaccinated);
+    //    dog.setNeutered(neutered);
+    //    dog.setFriendly(friendly);
+    //    dog.setGender(gender);
+    //    dog.setCommands(commands);
+    //    dog.setEatingSched(eating);
+    //    dog.setWalkSched(walking);
+    //    dog.setSleepSched(sleeping);
+    //}
 
     public Observable<List<Breed>> getBreeds() {
         return dogRepository.getBreeds();

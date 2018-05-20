@@ -106,6 +106,7 @@
         <item name="panelBackground">@color/white</item>
         <item name="android:inputType">textCapSentences</item>
         <item name="android:textSize">18sp</item>
+        <item name="android:maxLength">180</item>
     </style>
 
     <style name="ListItemTitleStyle"

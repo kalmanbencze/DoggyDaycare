@@ -20,6 +20,6 @@ public class OperationStatus {
     }
 
     public boolean isSuccess() {
-        return status == LOCAL_SUCCESS;
+        return status == ONLINE_SUCCESS;
     }
 }

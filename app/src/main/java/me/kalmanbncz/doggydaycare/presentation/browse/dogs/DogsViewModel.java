@@ -3,8 +3,6 @@ package me.kalmanbncz.doggydaycare.presentation.browse.dogs;
 import android.util.Log;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.processors.ReplayProcessor;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 import java.util.List;
@@ -34,10 +32,6 @@ public class DogsViewModel extends RecyclerViewViewModel {
 
     private final BehaviorSubject<Boolean> loading = BehaviorSubject.createDefault(false);
 
-    private ReplayProcessor<Integer> paginator = ReplayProcessor.create();
-
-    private int pageIndex = 0;
-
     private final Observable<String> snackbar = BehaviorSubject.create();
 
     @Inject
@@ -49,18 +43,24 @@ public class DogsViewModel extends RecyclerViewViewModel {
         loadMoreItems();
     }
 
+    //public Flowable<List<Dog>> getDogs() {
+    //    return paginator.subscribeOn(Schedulers.computation())
+    //        .map(page -> {
+    //            loading.onNext(true);
+    //            List<Dog> first = dogRepository.getDogs(page)
+    //                .doOnNext(dogs -> loading.onNext(false))
+    //                .subscribeOn(Schedulers.computation())
+    //                .observeOn(AndroidSchedulers.mainThread())
+    //                .blockingFirst();
+    //            return first;
+    //        })
+    //        .observeOn(AndroidSchedulers.mainThread());
+    //}
+
     public Flowable<List<Dog>> getDogs() {
-        return paginator.subscribeOn(Schedulers.computation())
-            .map(page -> {
-                loading.onNext(true);
-                List<Dog> first = dogRepository.getDogs(page)
-                    .doOnNext(dogs -> loading.onNext(false))
-                    .subscribeOn(Schedulers.computation())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .blockingFirst();
-                return first;
-            })
-            .observeOn(AndroidSchedulers.mainThread());
+        return dogRepository.getDogs().doOnEach(dogs -> {
+            Log.d(TAG, "getDogs: " + dogs.toString());
+        });
     }
 
     public Observable<LoginState> getLoginState() {
@@ -86,11 +86,9 @@ public class DogsViewModel extends RecyclerViewViewModel {
 
     @Override
     public void loadMoreItems() {
+        Log.d(TAG, "loadMoreItems: ");
         if (!loading.getValue()) {
-            loading.onNext(true);
-            pageIndex++;
-            Log.d(TAG, "loadMoreItems: requesting page " + pageIndex);
-            Schedulers.computation().scheduleDirect(() -> paginator.onNext(pageIndex));
+            Schedulers.computation().scheduleDirect(dogRepository::loadMoreDogs);
         }
     }
 

@@ -1,6 +1,5 @@
 package me.kalmanbncz.doggydaycare.presentation.browse.dogs;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
 import android.util.Log;
@@ -11,7 +10,6 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import me.kalmanbncz.doggydaycare.R;
@@ -36,27 +34,18 @@ public class DogsAdapter extends ItemAdapter<Dog, DogItemViewModel> {
     public DogViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dog, parent, false);
         DogItemViewModel viewModel = new DogItemViewModel(browseNavigator);
-        return new DogViewHolder(parent.getContext(), itemView, viewModel);
+        return new DogViewHolder(itemView, viewModel);
     }
 
-    public void setItems(List<Dog> newItems) {
+    void setItems(List<Dog> newItems) {
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DogsDiffCallback(newItems, items), true);
         items.clear();
         items.addAll(newItems);
         diffResult.dispatchUpdatesTo(this);
     }
 
-    public void addItems(List<Dog> items) {
-        ArrayList<Dog> concatenated = new ArrayList<>();
-        concatenated.addAll(this.items);
-        concatenated.addAll(items);
-        setItems(concatenated);
-    }
-
     static class DogViewHolder
         extends ItemViewHolder<Dog, DogItemViewModel> {
-
-        private final Context context;
 
         @BindView(R.id.text_view_dog_title)
         TextView title;
@@ -64,9 +53,8 @@ public class DogsAdapter extends ItemAdapter<Dog, DogItemViewModel> {
         @BindView(R.id.text_view_dog_description)
         TextView description;
 
-        DogViewHolder(Context context, View itemView, DogItemViewModel viewModel) {
+        DogViewHolder(View itemView, DogItemViewModel viewModel) {
             super(itemView, viewModel);
-            this.context = context;
             ButterKnife.bind(this, itemView);
         }
 
@@ -87,16 +75,22 @@ public class DogsAdapter extends ItemAdapter<Dog, DogItemViewModel> {
 
         private static final String TAG = DogDescriptionFormatter.class.getSimpleName();
 
-        public static String format(Dog item) {
+        static String format(Dog item) {
             StringBuilder builder = new StringBuilder();
-            builder.append(StringUtils.capitalize(item.getBreed().toLowerCase().trim()))
-                .append(", ")
-                .append(formatYears(item.getYearOfBirth()))
-                .append("\n")
-                .append(StringUtils.capitalize(item.getGender().toLowerCase().trim()))
-                .append(", ")
-                .append((item.getGender().toLowerCase().trim().equals("male") ? "Neutered: " : "Spayed: ") +
-                            (item.isNeutered() ? "Yes" : "No"));
+            if (item.getBreed() != null && !item.getBreed().isEmpty()) {
+                builder.append(StringUtils.capitalize(item.getBreed().toLowerCase().trim()));
+            }
+            if (item.getYearOfBirth() != null && !item.getYearOfBirth().isEmpty()) {
+                builder.append(", ");
+                builder.append(formatYears(item.getYearOfBirth()));
+            }
+            builder.append("\n");
+            if (item.getGender() != null) {
+                builder.append(StringUtils.capitalize(item.getGender().toLowerCase().trim()));
+                builder.append(", ");
+            }
+            builder.append((item.getGender() == null || item.getGender().toLowerCase().trim().equals("male") ? "Neutered: " : "Spayed: "));
+            builder.append((item.isNeutered() ? "Yes" : "No"));
             return builder.toString();
         }
 

@@ -7,14 +7,14 @@ import io.reactivex.subjects.PublishSubject;
 import javax.inject.Inject;
 import me.kalmanbncz.doggydaycare.data.LoginResult;
 import me.kalmanbncz.doggydaycare.data.LoginState;
-import me.kalmanbncz.doggydaycare.di.scopes.screen.LoginScreenScope;
+import me.kalmanbncz.doggydaycare.di.scopes.screen.RegisterScreenScope;
 import me.kalmanbncz.doggydaycare.domain.ResourcesProvider;
 import me.kalmanbncz.doggydaycare.domain.user.UserRepository;
 
 /**
  * Created by kalman.bencze on 18/05/2018.
  */
-@LoginScreenScope
+@RegisterScreenScope
 public class RegisterViewModel {
 
     //    private static final String USERNAME_REGEX = "/^.{4,}$/";

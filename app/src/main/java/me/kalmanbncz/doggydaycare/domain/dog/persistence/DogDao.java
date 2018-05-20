@@ -25,6 +25,12 @@ public abstract class DogDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract long addOrUpdateDog(DogEntity dogEntity);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract void insertAll(DogEntity... dogEntities);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract void insertAll(BreedEntity... breedEntities);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract void insert(BreedEntity entity);
 }

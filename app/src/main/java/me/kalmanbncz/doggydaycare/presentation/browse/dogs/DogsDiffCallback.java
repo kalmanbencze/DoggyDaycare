@@ -35,6 +35,6 @@ class DogsDiffCallback extends DiffUtil.Callback {
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-        return oldDogs.get(oldItemPosition).getId() == newDogs.get(newItemPosition).getId();
+        return oldDogs.get(oldItemPosition).equals(newDogs.get(newItemPosition));
     }
 }

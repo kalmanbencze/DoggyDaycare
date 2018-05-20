@@ -21,4 +21,9 @@ public class BreedEntity {
 
     @ColumnInfo(name = "timestamp")
     long timestamp;
+
+    public BreedEntity(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

@@ -1,5 +1,6 @@
 package me.kalmanbncz.doggydaycare.domain.dog;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import java.util.List;
 import me.kalmanbncz.doggydaycare.data.Breed;
@@ -12,9 +13,11 @@ import me.kalmanbncz.doggydaycare.di.scopes.flow.BrowseFlowScope;
 @BrowseFlowScope
 public interface DogRepository {
 
-    Observable<List<Dog>> getDogs(int page);
+    Flowable<List<Dog>> getDogs();
 
     Observable<List<Breed>> getBreeds();
 
     Observable<OperationStatus> addOrUpdate(Dog dog);
+
+    void loadMoreDogs();
 }

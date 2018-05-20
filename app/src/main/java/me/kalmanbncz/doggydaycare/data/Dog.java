@@ -25,13 +25,13 @@ public class Dog {
 
     private boolean friendly;
 
-    private String commands;
+    private String commands = "";
 
-    private String eatingSched;
+    private String eatingSched = "";
 
-    private String sleepSched;
+    private String sleepSched = "";
 
-    private String walkSched;
+    private String walkSched = "";
 
     public Dog(int id, String name, String breed, String gender, String size, String yearOfBirth, boolean vaccinated, boolean neutered,
                boolean friendly, String commands, String eatingSched, String sleepSched, String walkSched) {
@@ -52,6 +52,22 @@ public class Dog {
 
     public Dog() {
 
+    }
+
+    public Dog(Dog dog) {
+        this.id = dog.id;
+        this.name = dog.name;
+        this.breed = dog.breed;
+        this.gender = dog.gender;
+        this.size = dog.size;
+        this.yearOfBirth = dog.yearOfBirth;
+        this.vaccinated = dog.vaccinated;
+        this.neutered = dog.neutered;
+        this.friendly = dog.friendly;
+        this.commands = dog.commands;
+        this.eatingSched = dog.eatingSched;
+        this.sleepSched = dog.sleepSched;
+        this.walkSched = dog.walkSched;
     }
 
     public int getId() {
@@ -156,6 +172,25 @@ public class Dog {
 
     public void setWalkSched(String walkSched) {
         this.walkSched = walkSched;
+    }
+
+    public boolean isValid() {
+        return !(
+            name == null ||
+                breed == null ||
+                yearOfBirth == null ||
+                size == null ||
+                gender == null ||
+                commands == null ||
+                eatingSched == null ||
+                walkSched == null ||
+                sleepSched == null ||
+                name.isEmpty() ||
+                breed.isEmpty() ||
+                yearOfBirth.isEmpty() ||
+                size.isEmpty() ||
+                gender.isEmpty()
+        );
     }
 
     public enum DogSize {

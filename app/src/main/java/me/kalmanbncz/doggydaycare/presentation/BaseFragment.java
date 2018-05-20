@@ -140,7 +140,9 @@ public abstract class BaseFragment extends Fragment implements FragmentManager.O
             if (getActionBar() != null) {
                 Drawable upArrow = AppCompatResources.getDrawable(getContext(), R.drawable.vector_close); ;
                 getActionBar().setDisplayHomeAsUpEnabled(!navigationStackIsEmpty);
-                getActionBar().setHomeAsUpIndicator(upArrow);
+                if (!navigationStackIsEmpty) {
+                    getActionBar().setHomeAsUpIndicator(upArrow);
+                }
             }
         }
     }

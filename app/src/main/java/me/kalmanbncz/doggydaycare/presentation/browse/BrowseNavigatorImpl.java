@@ -78,7 +78,7 @@ public class BrowseNavigatorImpl implements BrowseNavigator {
             Scope scope =
                 Toothpick.openScopes(ApplicationScope.class, BrowseFlowScope.class, DogsScreenScope.class, EditScreenScope.class);
             scope.installModules(new Module() {{
-                bind(Dog.class).toInstance(dog);
+                bind(Dog.class).toInstance(new Dog(dog));
             }});
             scope.bindScopeAnnotation(EditScreenScope.class);
             EditFragment fragment = new EditFragment();

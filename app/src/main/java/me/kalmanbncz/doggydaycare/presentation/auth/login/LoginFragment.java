@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,7 +46,10 @@ public class LoginFragment extends BaseFragment {
     protected TextInputEditText passwordEditText;
 
     @BindView(R.id.button_login)
-    protected Button loginButton;
+    protected AppCompatButton loginButton;
+
+    @BindView(R.id.button_register)
+    protected AppCompatButton registerButton;
 
     @Inject
     AuthNavigator navigator;
@@ -135,6 +138,7 @@ public class LoginFragment extends BaseFragment {
             usernameEditText.setEnabled(false);
             passwordEditText.setEnabled(false);
         });
+        registerButton.setOnClickListener(view -> navigator.openRegister());
     }
 
     private void onCompleted() {

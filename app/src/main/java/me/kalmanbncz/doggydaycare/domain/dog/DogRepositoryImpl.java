@@ -1,7 +1,10 @@
 package me.kalmanbncz.doggydaycare.domain.dog;
 
 import android.util.Log;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.processors.ReplayProcessor;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 import java.util.ArrayList;
@@ -36,6 +39,10 @@ public class DogRepositoryImpl implements DogRepository {
 
     private final DogDao dogDao;
 
+    private ReplayProcessor<Integer> paginator = ReplayProcessor.create();
+
+    private int pageIndex = 0;
+
     @Inject
     DogRepositoryImpl(DogsRetrofitApi dogsRetrofitApi, DogDatabase dogDao, ResourcesProvider resourcesProvider) {
         Log.d(TAG, "DogRepositoryImpl: created");
@@ -49,14 +56,15 @@ public class DogRepositoryImpl implements DogRepository {
      *
      * @return a {@link DogsPageList} with a list of dogs
      */
-    public Observable<List<Dog>> getDogs(int page) {
+    public Flowable<List<Dog>> getDogs() {
         Log.d(TAG, "getDogs: ");
-        return Observable.concat(dogDao.getDogs()
-                                     .toObservable()
-                                     .map(this::mapToDogs),
-                                 retrieveDogsInternal(page)
-                                     .map(this::mapToDogs))
-            ;
+        return dogDao.getDogs()
+            .map(this::mapToDogs);
+        // TODO: 5/20/2018 enable this for joint results from server
+        //return Flowable.concat(dogDao.getDogs()
+        //                             .map(this::mapToDogs),
+        //                         retrieveDogsInternal()
+        //                             .map(this::mapToDogs));
     }
 
     /**
@@ -75,6 +83,9 @@ public class DogRepositoryImpl implements DogRepository {
 
     @Override
     public Observable<OperationStatus> addOrUpdate(Dog dog) {
+        if (!dog.isValid()) {
+            return BehaviorSubject.createDefault(new OperationStatus(OperationStatus.FAILED));
+        }
         BehaviorSubject<OperationStatus> res = BehaviorSubject.createDefault(new OperationStatus(OperationStatus.STARTED));
         return res.map(status -> {
             long nr = dogDao.addOrUpdateDog(DogConverter.toEntity(dog));
@@ -94,16 +105,30 @@ public class DogRepositoryImpl implements DogRepository {
         });
     }
 
+    @Override
+    public void loadMoreDogs() {
+        pageIndex++;
+        Log.d(TAG, "loadMoreItems: requesting page " + pageIndex);
+        paginator.onNext(pageIndex);
+    }
+
     /**
      * Get dogs at a certain page.
      *
      * @return a {@link DogsPageList} with a list of dogs
      */
-    private Observable<DogsPageList> retrieveDogsInternal(int page) {
-        return dogsRetrofitApi.getDogs(page, apiKey)
-            .subscribeOn(Schedulers.io())
-            .map(this::mapToDogs)
-            .onErrorReturn(throwable -> new DogsPageList(new DogsRetrievalFailed(throwable)));
+    private Flowable<DogsPageList> retrieveDogsInternal() {
+        return paginator.subscribeOn(Schedulers.computation())
+            .map(page -> {
+                //loading.onNext(true);
+                DogsPageList first = dogsRetrofitApi.getDogs(page, apiKey).map(this::mapToDogs)
+                    //.doOnNext(dogs -> loading.onNext(false))
+                    .subscribeOn(Schedulers.computation())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .blockingFirst();
+                return first;
+            })
+            .observeOn(AndroidSchedulers.mainThread());
     }
 
     private List<Dog> mapToDogs(DogsPageList dogsPageList) {
