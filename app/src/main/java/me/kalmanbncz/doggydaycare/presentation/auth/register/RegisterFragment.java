@@ -91,8 +91,18 @@ public class RegisterFragment extends BaseFragment {
     public void onStart() {
         super.onStart();
         subscriptions.clear();
-        subscriptions.add(viewModel.getLoginState().subscribe(this::onStateChanged, this::onError));
-        subscriptions.add(viewModel.getTitle().subscribe(this::setTitle, this::onError));
+        subscriptions.add(viewModel.getLoginState()
+                              .subscribeOn(Schedulers.io())
+                              .observeOn(AndroidSchedulers.mainThread())
+                              .subscribe(
+                                  this::onStateChanged,
+                                  this::onError));
+        subscriptions.add(viewModel.getTitle()
+                              .subscribeOn(Schedulers.io())
+                              .observeOn(AndroidSchedulers.mainThread())
+                              .subscribe(
+                                  this::setTitle,
+                                  this::onError));
         usernameEditText.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -126,18 +136,23 @@ public class RegisterFragment extends BaseFragment {
             public void afterTextChanged(Editable s) {
             }
         });
-        subscriptions.add(viewModel.validator().subscribe(valid -> {
-            if (valid != null) {
-                showFormatError(valid);
-            }
-        }));
+        subscriptions.add(viewModel.validator()
+                              .subscribeOn(Schedulers.io())
+                              .observeOn(AndroidSchedulers.mainThread())
+                              .subscribe(valid -> {
+                                  if (valid != null) {
+                                      showFormatError(valid);
+                                  }
+                              }));
         usernameEditText.setText("user");
         passwordEditText.setText("123456");
         loginButton.setOnClickListener(v -> {
             subscriptions.add(viewModel.logIn(usernameEditText.getText().toString(), passwordEditText.getText().toString())
                                   .subscribeOn(Schedulers.io())
                                   .observeOn(AndroidSchedulers.mainThread())
-                                  .subscribe(this::onCompleted, this::onError));
+                                  .subscribe(
+                                      this::onCompleted,
+                                      this::onError));
         });
     }
 

@@ -149,7 +149,9 @@ public class EditFragment extends BaseFragment {
                     subscriptions.add(viewModel.save()
                                           .subscribeOn(Schedulers.io())
                                           .observeOn(AndroidSchedulers.mainThread())
-                                          .subscribe(this::onSaved, this::onError));
+                                          .subscribe(
+                                              this::onSaved,
+                                              this::onError));
                 } else {
                     displayErrors();
                 }

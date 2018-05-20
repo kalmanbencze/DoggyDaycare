@@ -157,11 +157,14 @@ public class LoginFragment extends BaseFragment {
             public void afterTextChanged(Editable s) {
             }
         });
-        subscriptions.add(viewModel.validator().subscribe(valid -> {
-            if (valid != null) {
-                showFormatError(valid);
-            }
-        }));
+        subscriptions.add(viewModel.validator()
+                              .subscribeOn(Schedulers.io())
+                              .observeOn(AndroidSchedulers.mainThread())
+                              .subscribe(valid -> {
+                                  if (valid != null) {
+                                      showFormatError(valid);
+                                  }
+                              }));
         if (usernameEditText.getText().length() == 0) {
             usernameEditText.setText("user1");
             passwordEditText.setText("123456");

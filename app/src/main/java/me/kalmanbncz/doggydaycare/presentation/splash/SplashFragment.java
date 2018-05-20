@@ -52,7 +52,8 @@ public class SplashFragment extends BaseFragment {
         subscriptions.add(viewModel.loggedIn()
                               .subscribeOn(Schedulers.io())
                               .observeOn(AndroidSchedulers.mainThread())
-                              .subscribe(this::forward));
+                              .subscribe(
+                                  this::forward));
     }
 
     @Override
