@@ -86,7 +86,6 @@ public class DogRepositoryImpl implements DogRepository {
                                      .toObservable()
                                      .map(this::mapTBreeds),
                                  dogsRetrofitApi.getBreeds(apiKey)
-                                     .subscribeOn(Schedulers.io())
                                      .map(this::mapTBreeds));
     }
 
@@ -127,7 +126,7 @@ public class DogRepositoryImpl implements DogRepository {
      * @return a {@link DogsPageList} with a list of dogs
      */
     @SuppressWarnings("unused")
-    Flowable<DogsPageList> retrieveDogsInternal() {
+    private Flowable<DogsPageList> retrieveDogsInternal() {
         //todo this is the paged flowable returning the dogs from the rest api if the above section is uncommented
         return paginator.subscribeOn(Schedulers.computation())
             .map(page -> {
