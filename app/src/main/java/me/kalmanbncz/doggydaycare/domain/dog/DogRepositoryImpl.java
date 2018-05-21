@@ -64,13 +64,16 @@ public class DogRepositoryImpl implements DogRepository {
      */
     public Flowable<List<Dog>> getDogs() {
         Log.d(TAG, "getDogs: ");
-        return userRepository.loadCurrentUser().toFlowable(BackpressureStrategy.LATEST).flatMap(user -> dogDao.getDogs(user.getId())
-            .map(this::mapToDogs));
-        // TODO: 5/20/2018 enable this for joint results from server and DB
-        //return Flowable.concat(dogDao.getDogs()
-        //                             .map(this::mapToDogs),
-        //                         retrieveDogsInternal()
-        //                             .map(this::mapToDogs));
+        //todo merging two data sources, showing local first, but online request doesn't arrive since the server url is non-existent
+        return userRepository.loadCurrentUser()
+            .toFlowable(BackpressureStrategy.LATEST)
+            .flatMap(user ->
+                         Flowable.concat(dogDao.getDogs(user.getId())
+                                             .map(
+                                                 this::mapToDogs),
+                                         retrieveDogsInternal()
+                                             .map(
+                                                 this::mapToDogs)));
     }
 
     /**
