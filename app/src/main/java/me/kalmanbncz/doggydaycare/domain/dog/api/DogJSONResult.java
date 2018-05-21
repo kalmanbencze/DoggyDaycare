@@ -10,6 +10,9 @@ public class DogJSONResult {
     @SerializedName("id")
     public int id;
 
+    @SerializedName("ownerId")
+    public int ownerId;
+
     @SerializedName("name")
     public String name;
 

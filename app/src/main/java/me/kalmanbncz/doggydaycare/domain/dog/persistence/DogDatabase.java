@@ -82,6 +82,7 @@ public abstract class DogDatabase extends RoomDatabase {
         for (int i = 0; i < 80; i++) {
             DogEntity result = new DogEntity();
             result.id = i;
+            result.ownerId = 0;//todo hardcoded userId 0
             result.name = "localdog" + (i + 1);
             result.breed = "breed" + (i + 1);
             result.gender = i % 2 == 0 ? "Male" : "Female";

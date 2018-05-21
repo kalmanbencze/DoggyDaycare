@@ -14,6 +14,9 @@ public class DogEntity {
     @PrimaryKey(autoGenerate = true)
     public int id;
 
+    @ColumnInfo(name = "ownerId")
+    public int ownerId;
+
     @ColumnInfo(name = "name")
     public String name;
 

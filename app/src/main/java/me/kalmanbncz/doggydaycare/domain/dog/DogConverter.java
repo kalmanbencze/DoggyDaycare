@@ -12,6 +12,7 @@ class DogConverter {
     public static DogEntity toEntity(Dog dog) {
         DogEntity entity = new DogEntity();
         entity.id = dog.getId();
+        entity.ownerId = dog.getOwnerId();
         entity.name = dog.getName();
         entity.breed = dog.getBreed();
         entity.gender = dog.getGender();

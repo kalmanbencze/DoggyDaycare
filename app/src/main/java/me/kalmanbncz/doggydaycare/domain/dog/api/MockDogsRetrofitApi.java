@@ -10,7 +10,7 @@ import java.util.Random;
 public class MockDogsRetrofitApi implements DogsRetrofitApi {
 
     @Override
-    public Observable<DogsJSONResponse> getDogs(int page, String apiKey) {
+    public Observable<DogsJSONResponse> getDogs(int userId, int page, String accessToken, String apiKey) {
         DogsJSONResponse response = new DogsJSONResponse();
         response.page = page;
         response.totalPages = 18;
@@ -20,6 +20,7 @@ public class MockDogsRetrofitApi implements DogsRetrofitApi {
             for (int i = (page - 1) * 10; i < (page) * 10; i++) {
                 DogJSONResult result = new DogJSONResult();
                 result.id = i;
+                result.ownerId = 0;//todo hardcoded userId 0
                 result.name = "name" + (i + 1);
                 result.breed = "breed" + (i + 1);
                 result.gender = i % 2 == 0 ? "Male" : "Female";

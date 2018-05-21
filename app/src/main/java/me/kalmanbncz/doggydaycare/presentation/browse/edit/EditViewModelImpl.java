@@ -33,7 +33,7 @@ class EditViewModelImpl implements EditViewModel {
         this.dogRepository = dogRepository;
         this.dog = dog;
         this.dogObservable = Observable.just(dog);
-        title.onNext(dog.getId() < 0 ? resourcesProvider.getCreateScreenTitle() : resourcesProvider.getEditScreenTitle());
+        title.onNext(dog.isValid() ? resourcesProvider.getEditScreenTitle() : resourcesProvider.getCreateScreenTitle());
     }
 
     @Override

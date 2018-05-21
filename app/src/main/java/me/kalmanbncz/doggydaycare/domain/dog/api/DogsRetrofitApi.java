@@ -28,9 +28,9 @@ public interface DogsRetrofitApi {
      *
      * @return a {@link Call} object which will return the response {@link DogsJSONResponse}
      */
-    @GET(DOG_URL)
-    Observable<DogsJSONResponse> getDogs(@Query("page") int page,
-                                         @Query("api_key") String apiKey);
+    @GET("{user_id}/" + DOG_URL)
+    Observable<DogsJSONResponse> getDogs(@Path("user_id") int userId, @Query("page") int page,
+                                         @Query("access_token") String accessToken, @Query("api_key") String apiKey);
 
     /**
      * Get the available breeds.

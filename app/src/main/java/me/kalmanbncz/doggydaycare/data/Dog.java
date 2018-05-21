@@ -31,9 +31,13 @@ public class Dog {
 
     private String walkSched = "";
 
-    public Dog(int id, String name, String breed, String gender, String size, String yearOfBirth, boolean vaccinated, boolean neutered,
+    private int ownerId;
+
+    public Dog(int id, int ownerId, String name, String breed, String gender, String size, String yearOfBirth, boolean vaccinated,
+               boolean neutered,
                boolean friendly, String commands, String eatingSched, String sleepSched, String walkSched) {
         this.id = id;
+        this.ownerId = ownerId;
         this.name = name;
         this.breed = breed;
         this.gender = gender;
@@ -54,6 +58,7 @@ public class Dog {
 
     public Dog(Dog dog) {
         this.id = dog.id;
+        this.ownerId = dog.ownerId;
         this.name = dog.name;
         this.breed = dog.breed;
         this.gender = dog.gender;
@@ -74,6 +79,14 @@ public class Dog {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(int ownerId) {
+        this.ownerId = ownerId;
     }
 
     public String getName() {
@@ -179,10 +192,6 @@ public class Dog {
                 yearOfBirth == null ||
                 size == null ||
                 gender == null ||
-                commands == null ||
-                eatingSched == null ||
-                walkSched == null ||
-                sleepSched == null ||
                 name.isEmpty() ||
                 breed.isEmpty() ||
                 yearOfBirth.isEmpty() ||

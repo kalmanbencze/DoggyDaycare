@@ -130,6 +130,7 @@ public class EditFragment extends BaseFragment {
         if (getActivity() != null) {
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
             toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
+            setTitle("");
         }
         setHasOptionsMenu(true);
     }

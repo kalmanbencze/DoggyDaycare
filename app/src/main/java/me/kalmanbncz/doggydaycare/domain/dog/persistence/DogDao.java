@@ -13,8 +13,8 @@ import java.util.List;
 @Dao
 public abstract class DogDao {
 
-    @Query("SELECT * FROM DogsTable ORDER BY id ASC")
-    public abstract Flowable<List<DogEntity>> getDogs();
+    @Query("SELECT * FROM DogsTable WHERE ownerId = :ownerId ORDER BY id ASC")
+    public abstract Flowable<List<DogEntity>> getDogs(int ownerId);
 
     @Query("SELECT * FROM BreedsTable ORDER BY id ASC")
     public abstract Flowable<List<BreedEntity>> getBreeds();

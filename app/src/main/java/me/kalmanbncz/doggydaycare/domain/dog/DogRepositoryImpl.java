@@ -1,6 +1,7 @@
 package me.kalmanbncz.doggydaycare.domain.dog;
 
 import android.util.Log;
+import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -23,6 +24,7 @@ import me.kalmanbncz.doggydaycare.domain.dog.persistence.BreedEntity;
 import me.kalmanbncz.doggydaycare.domain.dog.persistence.DogDao;
 import me.kalmanbncz.doggydaycare.domain.dog.persistence.DogDatabase;
 import me.kalmanbncz.doggydaycare.domain.dog.persistence.DogEntity;
+import me.kalmanbncz.doggydaycare.domain.user.UserRepository;
 import me.kalmanbncz.doggydaycare.presentation.browse.BrowseFlowScope;
 
 /**
@@ -41,11 +43,15 @@ public class DogRepositoryImpl implements DogRepository {
 
     private final ReplayProcessor<Integer> paginator = ReplayProcessor.create();
 
+    private final UserRepository userRepository;
+
     private int pageIndex = 0;
 
     @Inject
-    DogRepositoryImpl(DogsRetrofitApi dogsRetrofitApi, DogDatabase dogDao, ResourcesProvider resourcesProvider) {
+    DogRepositoryImpl(UserRepository userRepository, DogsRetrofitApi dogsRetrofitApi, DogDatabase dogDao,
+                      ResourcesProvider resourcesProvider) {
         Log.d(TAG, "DogRepositoryImpl: created");
+        this.userRepository = userRepository;
         this.dogsRetrofitApi = dogsRetrofitApi;
         this.dogDao = dogDao.dogDao();
         apiKey = resourcesProvider.getApiKey();
@@ -58,8 +64,8 @@ public class DogRepositoryImpl implements DogRepository {
      */
     public Flowable<List<Dog>> getDogs() {
         Log.d(TAG, "getDogs: ");
-        return dogDao.getDogs()
-            .map(this::mapToDogs);
+        return userRepository.loadCurrentUser().toFlowable(BackpressureStrategy.LATEST).flatMap(user -> dogDao.getDogs(user.getId())
+            .map(this::mapToDogs));
         // TODO: 5/20/2018 enable this for joint results from server and DB
         //return Flowable.concat(dogDao.getDogs()
         //                             .map(this::mapToDogs),
@@ -123,12 +129,13 @@ public class DogRepositoryImpl implements DogRepository {
         return paginator.subscribeOn(Schedulers.computation())
             .map(page -> {
                 //loading.onNext(true);
-                DogsPageList first = dogsRetrofitApi.getDogs(page, apiKey).map(this::mapToDogs)
+                return userRepository.loadCurrentUser()
+                    .flatMap(user ->
+                                 dogsRetrofitApi.getDogs(user.getId(), page, user.getToken(), apiKey).map(this::mapToDogs))
                     //.doOnNext(dogs -> loading.onNext(false))
                     .subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
                     .blockingFirst();
-                return first;
             })
             .observeOn(AndroidSchedulers.mainThread());
     }
@@ -151,6 +158,7 @@ public class DogRepositoryImpl implements DogRepository {
         final List<Dog> dogs = new ArrayList<>();
         for (DogJSONResult dogJSONResult : dogsJSONResponse.results) {
             final Dog dog = new Dog(dogJSONResult.id,
+                                    dogJSONResult.ownerId,
                                     dogJSONResult.name,
                                     dogJSONResult.breed,
                                     dogJSONResult.gender,
@@ -185,6 +193,7 @@ public class DogRepositoryImpl implements DogRepository {
         final List<Dog> dogs = new ArrayList<>();
         for (DogEntity dogEntity : dogEntities) {
             final Dog dog = new Dog(dogEntity.id,
+                                    dogEntity.ownerId,
                                     dogEntity.name,
                                     dogEntity.breed,
                                     dogEntity.gender,
