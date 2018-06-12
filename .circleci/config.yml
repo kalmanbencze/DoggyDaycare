@@ -13,17 +13,18 @@ jobs:
 #      - run:
 #         name: Chmod permissions #if permission for Gradlew Dependencies fail, use this. 
 #         command: sudo chmod +x ./gradlew
-      - run: sudo apt-get update; sudo apt-get install gradle-4.4
+      - run: sudo apt-get install gradle; gradle wrapper
+      - run: ./gradlew wrapper --gradle-version=4.8 --distribution-type=bin
       - run:
           name: Download Dependencies
-          command: gradle androidDependencies
+          command: gradlew androidDependencies
       - save_cache:
           paths:
             - ~/.gradle
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
           name: Run Tests
-          command: gradle lint test
+          command: ./gradlew lint test
       - store_artifacts:
           path: app/build/reports
           destination: reports
