@@ -14,6 +14,7 @@ jobs:
 #         name: Chmod permissions #if permission for Gradlew Dependencies fail, use this. 
 #         command: sudo chmod +x ./gradlew
       - run: sudo apt-get install gradle
+      - run: gradle wrapper
       - run:
           name: Download Dependencies
           command: gradlew androidDependencies
